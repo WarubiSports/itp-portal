@@ -84,7 +84,7 @@ export const TravelForm = ({ prospectId, initial }: Props) => {
           </h3>
         </div>
         <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
-          Let us know when you&apos;re arriving so we can arrange your pick-up.
+          Let us know when you&apos;re arriving so we can try to arrange a pick-up.
         </p>
 
         <div className="space-y-3">
@@ -136,7 +136,7 @@ export const TravelForm = ({ prospectId, initial }: Props) => {
             </div>
           </div>
           <div>
-            <label className="label">Do you need a pick-up?</label>
+            <label className="label">Would you like to request a pick-up?</label>
             <div className="grid grid-cols-2 gap-2">
               {[true, false].map((val) => (
                 <button

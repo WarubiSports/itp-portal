@@ -284,7 +284,7 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
         </div>
       </div>
       <div>
-        <label className="label">Do you need a pick-up?</label>
+        <label className="label">Would you like to request a pick-up?</label>
         <div className="grid grid-cols-2 gap-2">
           {[true, false].map((val) => (
             <button
