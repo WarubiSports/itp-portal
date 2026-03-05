@@ -16,6 +16,7 @@ export type TrialProspect = {
   trial_end_date?: string;
   travel_arrangements?: string;
   status: string;
+  scout_id?: string;
   created_at: string;
   // Onboarding fields
   equipment_size?: string;

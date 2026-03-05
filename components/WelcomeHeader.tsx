@@ -7,7 +7,12 @@ const formatDate = (dateStr?: string): string => {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 };
 
-export const WelcomeHeader = ({ prospect }: { prospect: TrialProspect }) => {
+interface WelcomeHeaderProps {
+  prospect: TrialProspect;
+  scoutInfo?: { name: string; affiliation: string | null } | null;
+}
+
+export const WelcomeHeader = ({ prospect, scoutInfo }: WelcomeHeaderProps) => {
   const trialRange =
     prospect.trial_start_date && prospect.trial_end_date
       ? `${formatDate(prospect.trial_start_date)} – ${formatDate(prospect.trial_end_date)}`
@@ -32,6 +37,12 @@ export const WelcomeHeader = ({ prospect }: { prospect: TrialProspect }) => {
         {trialRange && (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             Trial: {trialRange}
+          </p>
+        )}
+        {scoutInfo && (
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            Referred by {scoutInfo.name}
+            {scoutInfo.affiliation && ` (${scoutInfo.affiliation})`}
           </p>
         )}
       </div>

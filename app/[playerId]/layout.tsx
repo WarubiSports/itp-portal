@@ -26,12 +26,23 @@ export default async function PlayerLayout({ params, children }: Props) {
 
   const player = prospect as TrialProspect;
 
+  // Fetch scout info if this prospect was referred by a scout
+  let scoutInfo: { name: string; affiliation: string | null } | null = null;
+  if (player.scout_id) {
+    const { data: scout } = await supabase
+      .from("scouts")
+      .select("name, affiliation")
+      .eq("id", player.scout_id)
+      .single();
+    if (scout) scoutInfo = scout;
+  }
+
   // Only show onboarding tab for committed players
   const showOnboarding = ['accepted', 'placed'].includes(player.status) || !!player.onboarding_completed_at;
 
   return (
     <main className="mx-auto min-h-screen max-w-lg pb-safe">
-      <WelcomeHeader prospect={player} />
+      <WelcomeHeader prospect={player} scoutInfo={scoutInfo} />
       {showOnboarding ? (
         <>
           <TabNav playerId={playerId} completed={!!player.onboarding_completed_at} />
