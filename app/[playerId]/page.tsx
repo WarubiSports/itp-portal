@@ -43,7 +43,7 @@ export default async function PlayerPage({ params }: Props) {
 
   let locations = (locationsData || []) as ITPLocation[];
 
-  // If player has a room assignment, override the generic housing location
+  // Override housing location based on room assignment
   if (player.room_id) {
     const { data: roomData } = await supabase
       .from("rooms")
@@ -71,6 +71,18 @@ export default async function PlayerPage({ params }: Props) {
         );
       }
     }
+  } else {
+    // No room assigned — show self-organized housing
+    locations = locations.map((loc) =>
+      loc.category === "housing"
+        ? {
+            ...loc,
+            name: "Self-Organized",
+            address: "No housing assigned yet — please organize your own accommodation.",
+            maps_url: null,
+          }
+        : loc
+    );
   }
 
   return (
