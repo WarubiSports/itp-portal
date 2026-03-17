@@ -30,7 +30,7 @@ export default async function PlayerPage({ params }: Props) {
       .select("*")
       .gte("date", startDate)
       .lte("date", endDate)
-      .not("type", "in", "(language_class,recovery)")
+      .not("type", "in", "(language_class,recovery,airport_pickup)")
       .order("date")
       .order("start_time");
     events = (data || []) as CalendarEvent[];
