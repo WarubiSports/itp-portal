@@ -69,10 +69,13 @@ export default async function VisitorPage({ params }: Props) {
     return (a.start_time || "").localeCompare(b.start_time || "");
   }) as CalendarEvent[];
 
-  // Fetch contacts for photo lookup
-  const contactIds = (meetingsData || [])
-    .map((m) => m.contact_id)
-    .filter((id): id is string => !!id);
+  // Fetch contacts for photo lookup — collect from both contact_ids array and legacy contact_id
+  const contactIds = (meetingsData || []).flatMap((m) => {
+    const ids: string[] = [];
+    if (m.contact_ids && Array.isArray(m.contact_ids)) ids.push(...m.contact_ids);
+    else if (m.contact_id) ids.push(m.contact_id);
+    return ids;
+  }).filter(Boolean);
 
   const { data: contactsData } = contactIds.length > 0
     ? await supabase
@@ -98,12 +101,21 @@ export default async function VisitorPage({ params }: Props) {
   // Deduplicate contacts from visitor-specific meetings (prefer itp_contacts data for photo)
   const contactMap = new Map<string, { name: string; role: string; photo_url?: string }>();
   for (const e of (meetingsData || [])) {
-    if (e.contact_id && contactLookup.has(e.contact_id)) {
-      const c = contactLookup.get(e.contact_id)!;
-      if (!contactMap.has(c.name)) {
-        contactMap.set(c.name, { name: c.name, role: c.role || "", photo_url: c.photo_url });
+    // Handle contact_ids array (new) and contact_id (legacy)
+    const ids = (e.contact_ids && Array.isArray(e.contact_ids) && e.contact_ids.length > 0)
+      ? e.contact_ids
+      : e.contact_id ? [e.contact_id] : [];
+
+    for (const id of ids) {
+      if (contactLookup.has(id)) {
+        const c = contactLookup.get(id)!;
+        if (!contactMap.has(c.name)) {
+          contactMap.set(c.name, { name: c.name, role: c.role || "", photo_url: c.photo_url });
+        }
       }
-    } else if (e.contact_name && !contactMap.has(e.contact_name)) {
+    }
+    // Fallback to text fields if no structured contacts
+    if (ids.length === 0 && e.contact_name && !contactMap.has(e.contact_name)) {
       contactMap.set(e.contact_name, { name: e.contact_name, role: e.contact_role || "" });
     }
   }
