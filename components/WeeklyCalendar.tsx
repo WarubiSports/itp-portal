@@ -2,26 +2,13 @@
 
 import type { CalendarEvent } from "@/lib/types";
 
-// Map event type to color dot
-const typeColors: Record<string, string> = {
-  team_training: "#22c55e",
-  individual_training: "#16a34a",
-  training: "#22c55e",
-  trial: "#22c55e",
-  prospect_trial: "#22c55e",
-  gym: "#3b82f6",
-  match: "#ED1C24",
-  tournament: "#ED1C24",
-  video_session: "#6366f1",
-  medical: "#ef4444",
-  meeting: "#64748b",
-  airport_pickup: "#06b6d4",
-  team_activity: "#a78bfa",
-  other: "#9ca3af",
-  visa: "#64748b",
+type ContactInfo = {
+  id: string;
+  name: string;
+  role?: string;
+  organization?: string;
+  photo_url?: string;
 };
-
-const getColor = (type: string): string => typeColors[type] || "#9ca3af";
 
 const formatTime = (time?: string): string => {
   if (!time) return "";
@@ -38,7 +25,6 @@ const formatTime = (time?: string): string => {
   return `${parts[0]}:${parts[1]}`;
 };
 
-// Timezone-safe date string
 const toDateStr = (d: Date): string => {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -70,14 +56,33 @@ const isToday = (dateStr: string): boolean => {
   return dateStr === toDateStr(new Date());
 };
 
+const typeIcons: Record<string, string> = {
+  meeting: "🤝",
+  team_training: "⚽",
+  training: "⚽",
+  individual_training: "🏋️",
+  gym: "🏋️",
+  match: "🏟️",
+  tournament: "🏟️",
+  video_session: "🎬",
+  medical: "🏥",
+  airport_pickup: "✈️",
+  team_activity: "👥",
+  other: "📋",
+};
+
+const getIcon = (type: string): string => typeIcons[type] || "📋";
+
 export const WeeklyCalendar = ({
   events,
   startDate,
   endDate,
+  contactLookup = {},
 }: {
   events: CalendarEvent[];
   startDate: string;
   endDate: string;
+  contactLookup?: Record<string, ContactInfo>;
 }) => {
   if (!startDate || !endDate) {
     return (
@@ -86,7 +91,7 @@ export const WeeklyCalendar = ({
           Your Schedule
         </h2>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Trial dates not yet confirmed.
+          Visit dates not yet confirmed.
         </p>
       </section>
     );
@@ -94,7 +99,6 @@ export const WeeklyCalendar = ({
 
   const dates = getDateRange(startDate, endDate);
 
-  // Group events by date, sorted by start_time within each day
   const eventsByDate = new Map<string, CalendarEvent[]>();
   for (const event of events) {
     const existing = eventsByDate.get(event.date) || [];
@@ -103,12 +107,19 @@ export const WeeklyCalendar = ({
   }
   for (const [, dayEvents] of eventsByDate) {
     dayEvents.sort((a, b) => {
-      // Sort by displayed time (Europe/Berlin), not raw timestamp
       const timeA = formatTime(a.start_time);
       const timeB = formatTime(b.start_time);
       return timeA.localeCompare(timeB);
     });
   }
+
+  // Resolve contacts for an event
+  const getEventContacts = (event: CalendarEvent): ContactInfo[] => {
+    const ids = (event.contact_ids && Array.isArray(event.contact_ids) && event.contact_ids.length > 0)
+      ? event.contact_ids
+      : event.contact_id ? [event.contact_id] : [];
+    return ids.map(id => contactLookup[id]).filter((c): c is ContactInfo => !!c);
+  };
 
   return (
     <section className="px-4 pb-8">
@@ -116,22 +127,15 @@ export const WeeklyCalendar = ({
         Your Schedule
       </h2>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         {dates.map((dateStr) => {
           const dayEvents = eventsByDate.get(dateStr) || [];
           const today = isToday(dateStr);
 
           return (
-            <div
-              key={dateStr}
-              className={`rounded-xl border p-4 ${
-                today
-                  ? "border-[#ED1C24]/30 bg-red-50/50 dark:border-[#ED1C24]/20 dark:bg-red-950/10"
-                  : "border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800"
-              }`}
-            >
+            <div key={dateStr}>
               {/* Day header */}
-              <div className="mb-3 flex items-center gap-2">
+              <div className="mb-2 flex items-center gap-2">
                 <p
                   className={`text-sm font-semibold ${
                     today
@@ -150,43 +154,105 @@ export const WeeklyCalendar = ({
 
               {/* Events */}
               {dayEvents.length === 0 ? (
-                <p className="text-sm text-zinc-400 dark:text-zinc-500">
-                  Rest day
-                </p>
+                <div className="rounded-xl border border-dashed border-zinc-200 px-4 py-3 dark:border-zinc-700">
+                  <p className="text-sm text-zinc-400 dark:text-zinc-500">
+                    No activities scheduled
+                  </p>
+                </div>
               ) : (
                 <div className="flex flex-col gap-2">
                   {dayEvents.map((event) => {
-                    const color = getColor(event.type);
+                    const contacts = getEventContacts(event);
+                    const icon = getIcon(event.type);
+                    const timeStr = formatTime(event.start_time);
+                    const endTimeStr = formatTime(event.end_time);
+
                     return (
-                      <div key={event.id} className="flex items-start gap-3">
-                        {/* Color dot */}
-                        <div
-                          className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full"
-                          style={{ backgroundColor: color }}
-                        />
-                        <div className="min-w-0 flex-1">
-                          <p className="font-medium text-zinc-900 dark:text-zinc-100">
-                            {event.title}
-                          </p>
-                          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                            {formatTime(event.start_time)}
-                            {event.end_time && (
-                              <> &ndash; {formatTime(event.end_time)}</>
-                            )}
-                            {event.location && (
-                              <> &middot; {event.location}</>
-                            )}
-                          </p>
-                          {event.contact_name && (
-                            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                              with {event.contact_name}
-                              {event.contact_role && (
-                                <span className="text-zinc-400 dark:text-zinc-500">
-                                  {" "}({event.contact_role})
+                      <div
+                        key={event.id}
+                        className={`rounded-xl border p-4 ${
+                          today
+                            ? "border-[#ED1C24]/20 bg-red-50/40 dark:border-[#ED1C24]/10 dark:bg-red-950/10"
+                            : "border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800"
+                        }`}
+                      >
+                        <div className="flex gap-3">
+                          {/* Time column */}
+                          {timeStr && (
+                            <div className="flex w-12 shrink-0 flex-col items-center pt-0.5">
+                              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                                {timeStr}
+                              </span>
+                              {endTimeStr && (
+                                <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                                  {endTimeStr}
                                 </span>
                               )}
-                            </p>
+                            </div>
                           )}
+
+                          {/* Divider */}
+                          {timeStr && (
+                            <div className="w-px shrink-0 bg-zinc-200 dark:bg-zinc-700" />
+                          )}
+
+                          {/* Content */}
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-start gap-2">
+                              <span className="text-base">{icon}</span>
+                              <div className="min-w-0 flex-1">
+                                <p className="font-medium text-zinc-900 dark:text-zinc-100">
+                                  {event.title}
+                                </p>
+                                {event.location && (
+                                  <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
+                                    📍 {event.location}
+                                  </p>
+                                )}
+                                {event.description && (
+                                  <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                                    {event.description}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Contact chips with photos */}
+                            {contacts.length > 0 && (
+                              <div className="mt-2 flex flex-wrap gap-2">
+                                {contacts.map((c) => (
+                                  <div
+                                    key={c.id}
+                                    className="flex items-center gap-1.5 rounded-full bg-zinc-100 py-1 pl-1 pr-2.5 dark:bg-zinc-700"
+                                  >
+                                    {c.photo_url ? (
+                                      <img
+                                        src={c.photo_url}
+                                        alt={c.name}
+                                        className="h-5 w-5 rounded-full object-cover"
+                                      />
+                                    ) : (
+                                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                                        <span className="text-[9px] font-semibold text-[#ED1C24]">
+                                          {c.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
+                                        </span>
+                                      </div>
+                                    )}
+                                    <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                                      {c.name.split(" ")[0]}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Fallback: legacy contact text if no structured contacts */}
+                            {contacts.length === 0 && event.contact_name && (
+                              <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">
+                                with {event.contact_name}
+                              </p>
+                            )}
+                          </div>
                         </div>
                       </div>
                     );

@@ -40,34 +40,15 @@ export default async function VisitorPage({ params }: Props) {
 
   const visitor = visitorData as Visitor;
 
-  // Fetch visitor-specific meetings + ITP team events during visit
-  const [{ data: meetingsData }, { data: teamEventsData }] = await Promise.all([
-    supabase
-      .from("events")
-      .select("*")
-      .eq("visitor_id", visitorId)
-      .order("date")
-      .order("start_time"),
-    supabase
-      .from("events")
-      .select("*")
-      .gte("date", visitor.visit_start_date)
-      .lte("date", visitor.visit_end_date)
-      .not("type", "in", "(language_class,recovery,airport_pickup,school)")
-      .is("visitor_id", null)
-      .order("date")
-      .order("start_time"),
-  ]);
+  // Fetch only visitor-specific events (created via schedule planner)
+  const { data: meetingsData } = await supabase
+    .from("events")
+    .select("*")
+    .eq("visitor_id", visitorId)
+    .order("date")
+    .order("start_time");
 
-  // Merge and deduplicate
-  const meetingIds = new Set((meetingsData || []).map((m) => m.id));
-  const events = [
-    ...(meetingsData || []),
-    ...(teamEventsData || []).filter((e) => !meetingIds.has(e.id)),
-  ].sort((a, b) => {
-    if (a.date !== b.date) return a.date.localeCompare(b.date);
-    return (a.start_time || "").localeCompare(b.start_time || "");
-  }) as CalendarEvent[];
+  const events = (meetingsData || []) as CalendarEvent[];
 
   // Fetch contacts for photo lookup — collect from both contact_ids array and legacy contact_id
   const contactIds = (meetingsData || []).flatMap((m) => {
@@ -189,6 +170,7 @@ export default async function VisitorPage({ params }: Props) {
         events={events}
         startDate={visitor.visit_start_date}
         endDate={visitor.visit_end_date}
+        contactLookup={Object.fromEntries(contactLookup)}
       />
 
       {/* Your Contacts */}
