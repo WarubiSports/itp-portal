@@ -167,53 +167,53 @@ export default async function VisitorPage({ params }: Props) {
       {/* Your Contacts */}
       <ContactsList contacts={contacts} />
 
-      {/* Weather */}
-      <WeatherForecast startDate={visitor.visit_start_date} endDate={visitor.visit_end_date} />
-
-      {/* WhatsApp Contact */}
+      {/* Quick Info Section */}
       <section className="px-4 pb-8">
-        <a
-          href={`https://wa.me/491602717912?text=${encodeURIComponent(`Hi Thomas, I'm ${visitor.first_name} ${visitor.last_name} and excited to visit the 1.FC Köln ITP. I have a couple of questions:`)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 p-4 transition-colors active:bg-green-100 dark:border-green-800 dark:bg-green-950/40 dark:active:bg-green-900/40"
-        >
-          <span className="text-2xl">💬</span>
-          <div className="min-w-0 flex-1">
-            <p className="font-medium text-green-900 dark:text-green-100">
-              Message Thomas on WhatsApp
-            </p>
-          </div>
-          <span className="text-sm font-medium text-green-600 dark:text-green-400">→</span>
-        </a>
-      </section>
+        <h2 className="mb-3 text-lg font-bold text-zinc-900 dark:text-zinc-50">
+          Good to Know
+        </h2>
+        <div className="rounded-xl border border-zinc-200 bg-white divide-y divide-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:divide-zinc-700">
+          {/* Weather */}
+          <WeatherForecast startDate={visitor.visit_start_date} endDate={visitor.visit_end_date} />
 
-      {/* Emergency Info */}
-      <section className="px-4 pb-8">
-        <details className="rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
-          <summary className="flex cursor-pointer items-center gap-3 p-4 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-            🚨 Emergency Information
-          </summary>
-          <div className="space-y-3 border-t border-zinc-100 px-4 pb-4 pt-3 dark:border-zinc-700">
-            <div>
-              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Emergency Number</p>
-              <a href="tel:112" className="text-sm text-[#ED1C24] font-medium">112</a>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">Police, Fire & Ambulance (free, works from any phone)</p>
+          {/* WhatsApp */}
+          <a
+            href={`https://wa.me/491602717912?text=${encodeURIComponent(`Hi Thomas, I'm ${visitor.first_name} ${visitor.last_name} and excited to visit the 1.FC Köln ITP. I have a couple of questions:`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-4 transition-colors active:bg-zinc-50 dark:active:bg-zinc-700/50"
+          >
+            <span className="text-lg">💬</span>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Message Thomas on WhatsApp</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">Questions? We&apos;re happy to help.</p>
             </div>
-            <div>
-              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Nearest Hospital</p>
-              <a href="https://maps.google.com/?q=St.+Franziskus+Hospital+Köln" target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 dark:text-blue-400 underline">
-                St. Franziskus Hospital
-              </a>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">Schönsteinstraße 63, 50825 Köln</p>
+            <span className="text-sm text-zinc-400">→</span>
+          </a>
+
+          {/* Emergency */}
+          <details>
+            <summary className="flex cursor-pointer items-center gap-3 p-4 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+              <span className="text-lg">🚨</span>
+              <span className="flex-1">Emergency Information</span>
+              <span className="text-xs text-zinc-400">Tap to expand</span>
+            </summary>
+            <div className="space-y-2 px-4 pb-4 pt-1 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-zinc-500 dark:text-zinc-400">Emergency</span>
+                <a href="tel:112" className="font-medium text-[#ED1C24]">112</a>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-zinc-500 dark:text-zinc-400">Hospital</span>
+                <a href="https://maps.google.com/?q=St.+Franziskus+Hospital+Köln" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 underline">St. Franziskus</a>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-zinc-500 dark:text-zinc-400">Thomas</span>
+                <a href="tel:+491602717912" className="text-blue-600 dark:text-blue-400 underline">+49 160 2717912</a>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Your Contact</p>
-              <p className="text-sm text-zinc-700 dark:text-zinc-300">Thomas Ellinger</p>
-              <a href="tel:+491602717912" className="text-sm text-blue-600 dark:text-blue-400 underline">+49 160 2717912</a>
-            </div>
-          </div>
-        </details>
+          </details>
+        </div>
       </section>
 
       <section className="px-4 pb-12">
