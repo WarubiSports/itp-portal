@@ -17,8 +17,8 @@ type Props = {
 };
 
 const ARRIVAL_POINTS = [
-  { value: "CGN", label: "Cologne/Bonn (CGN)" },
-  { value: "DUS", label: "Düsseldorf (DUS)" },
+  { value: "CGN", label: "CGN (Köln/Bonn)" },
+  { value: "DUS", label: "DUS (Düsseldorf)" },
   { value: "KLN_HBF", label: "Köln Hbf (Train)" },
 ];
 
