@@ -43,6 +43,7 @@ export type TrialProspect = {
   accommodation_type?: string;
   accommodation_notes?: string;
   accommodation_details?: string;
+  housing_status?: string;
 };
 
 export type OnboardingFormData = {

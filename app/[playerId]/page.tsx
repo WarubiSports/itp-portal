@@ -212,6 +212,8 @@ export default async function PlayerPage({ params }: Props) {
             availability={housingAvailability}
             totalAvailable={totalAvailable}
             alreadyRequested={alreadyRequestedHousing}
+            housingStatus={player.housing_status}
+            accommodationNotes={player.accommodation_notes}
           />
         </section>
       )}

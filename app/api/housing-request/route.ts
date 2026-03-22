@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
 
   const { error } = await supabase
     .from("trial_prospects")
-    .update({ accommodation_type: "house" })
+    .update({ accommodation_type: "house", housing_status: "pending" })
     .eq("id", prospectId);
 
   if (error) {
