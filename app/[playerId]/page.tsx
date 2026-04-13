@@ -5,6 +5,7 @@ import { LocationsList } from "@/components/LocationsList";
 import { TravelForm } from "@/components/TravelForm";
 import { ContactsList } from "@/components/ContactsList";
 import { WeatherForecast } from "@/components/WeatherForecast";
+import { DocumentStatus } from "@/components/DocumentStatus";
 
 export const dynamic = "force-dynamic";
 
@@ -75,6 +76,14 @@ export default async function PlayerPage({ params }: Props) {
     }
   }
 
+  // Fetch signed documents
+  const { data: signedDocsData } = await supabase
+    .from("player_documents")
+    .select("document_type, document_title, signed_at, signer_name")
+    .eq("player_id", playerId);
+
+  const signedDocs = (signedDocsData || []) as { document_type: string; document_title: string; signed_at: string; signer_name: string }[];
+
   // Fetch ITP staff contacts
   const { data: staffContacts } = await supabase
     .from("itp_contacts")
@@ -124,6 +133,7 @@ export default async function PlayerPage({ params }: Props) {
           </div>
         </section>
       )}
+      <DocumentStatus signedDocs={signedDocs} playerId={playerId} />
       <TravelForm
         prospectId={playerId}
         initial={player.travel_submitted_at ? {
