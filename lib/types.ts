@@ -44,6 +44,10 @@ export type TrialProspect = {
   accommodation_notes?: string;
   accommodation_details?: string;
   housing_status?: string;
+  // Payment fields
+  payment_link?: string;
+  payment_amount?: string;
+  payment_status?: string;
 };
 
 export type OnboardingFormData = {
