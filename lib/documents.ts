@@ -12,7 +12,7 @@ export const DOCUMENT_CONTENT: Record<string, { title: string; sections: { headi
       },
       {
         heading: 'Insurance',
-        body: 'I confirm that I hold valid health and accident insurance covering my stay in Germany for the full duration of the trial. I understand that neither 1. FC Köln nor Warubi Sports provides primary health insurance coverage, and that I am responsible for any medical costs not covered by my own insurance. I will provide proof of insurance prior to the start of the trial.',
+        body: 'I confirm that I either (a) hold valid health and accident insurance covering my stay in Germany for the full duration of the trial, or (b) am enrolled in the insurance coverage provided through the ITP program. I understand that I am responsible for any medical costs not covered by my insurance. If arranging my own insurance, I will provide proof of coverage prior to the start of the trial.',
       },
       {
         heading: 'Acknowledgement',
