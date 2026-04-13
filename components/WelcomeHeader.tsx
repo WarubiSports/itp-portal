@@ -45,40 +45,59 @@ export const WelcomeHeader = ({ prospect, scoutInfo }: WelcomeHeaderProps) => {
       />
 
       {/* Content */}
-      <div className="relative px-5 pt-10 pb-8">
+      <div className="relative px-5 pt-8 pb-8">
+        {/* Co-branded logo lockup — Warubi left, title center, FC Köln right */}
+        <div className="flex items-center justify-between mb-6">
+          <Image
+            src="/warubi-sports-logo.png"
+            alt="Warubi Sports"
+            width={90}
+            height={24}
+            priority
+            className="opacity-90 object-contain"
+          />
+          <div className="text-center">
+            <p className="text-[9px] font-bold tracking-[3px] text-white/70 uppercase">
+              International Talent Pathway
+            </p>
+          </div>
+          <Image
+            src="/fc-koln-crest.png"
+            alt="1. FC Köln"
+            width={36}
+            height={44}
+            priority
+            className="opacity-90 object-contain"
+          />
+        </div>
+
+        {/* Red accent bar */}
+        <div className="h-[2px] bg-white/20 mb-5 rounded-full overflow-hidden">
+          <div className="h-full w-full bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+        </div>
+
+        {/* Player info */}
         <div className="flex items-center gap-4">
           <div className="relative">
             <div className="absolute -inset-1 rounded-full bg-[var(--color-brand)] opacity-40 blur-md" />
-            <div className="relative w-16 h-16 rounded-full bg-[var(--color-surface)] ring-2 ring-[var(--color-brand)] flex items-center justify-center text-white font-bold text-xl font-[family-name:var(--font-outfit)]">
+            <div className="relative w-14 h-14 rounded-full bg-[var(--color-surface)] ring-2 ring-white/20 flex items-center justify-center text-white font-bold text-lg font-[family-name:var(--font-outfit)]">
               {initials}
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-outfit)] tracking-tight">
+            <h1 className="text-xl font-bold text-white font-[family-name:var(--font-outfit)] tracking-tight">
               Welcome, {prospect.first_name}
             </h1>
-            <span className="inline-block mt-1.5 text-xs font-medium text-white/80 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1">
+            <span className="inline-block mt-1 text-xs font-medium text-white/80 bg-white/10 backdrop-blur-sm rounded-full px-3 py-0.5">
               {trialRange ? `Trial: ${trialRange}` : 'Dates to be confirmed'}
             </span>
             {scoutInfo && (
-              <p className="text-xs text-white/60 mt-1">
+              <p className="text-xs text-white/50 mt-1">
                 Referred by {scoutInfo.name}
                 {scoutInfo.affiliation && ` (${scoutInfo.affiliation})`}
               </p>
             )}
           </div>
-        </div>
-
-        {/* Logo */}
-        <div className="flex justify-center mt-5">
-          <Image
-            src="/warubi-fc-logo.png"
-            alt="Warubi Sports x 1. FC Köln"
-            width={200}
-            height={50}
-            priority
-            className="opacity-90"
-          />
         </div>
       </div>
 
