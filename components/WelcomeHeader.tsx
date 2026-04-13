@@ -16,6 +16,8 @@ export const WelcomeHeader = ({ prospect, scoutInfo }: WelcomeHeaderProps) => {
   const trialRange =
     prospect.trial_start_date && prospect.trial_end_date
       ? `${formatDate(prospect.trial_start_date)} – ${formatDate(prospect.trial_end_date)}`
+      : prospect.trial_start_date
+      ? `Starting ${formatDate(prospect.trial_start_date)}`
       : null;
 
   return (
@@ -34,11 +36,9 @@ export const WelcomeHeader = ({ prospect, scoutInfo }: WelcomeHeaderProps) => {
         <p className="text-lg font-medium text-zinc-700 dark:text-zinc-300">
           {prospect.first_name} {prospect.last_name}
         </p>
-        {trialRange && (
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Trial: {trialRange}
-          </p>
-        )}
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          {trialRange ? `Trial: ${trialRange}` : 'Trial dates to be confirmed'}
+        </p>
         {scoutInfo && (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             Referred by {scoutInfo.name}

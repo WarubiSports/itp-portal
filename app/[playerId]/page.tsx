@@ -167,11 +167,13 @@ export default async function PlayerPage({ params }: Props) {
           }
         })() : undefined}
       />
-      <WeeklyCalendar
-        events={events}
-        startDate={startDate || ""}
-        endDate={endDate || ""}
-      />
+      {startDate && endDate && events.length > 0 && (
+        <WeeklyCalendar
+          events={events}
+          startDate={startDate}
+          endDate={endDate}
+        />
+      )}
       <LocationsList locations={locations} />
 
       {/* Your Contacts */}
