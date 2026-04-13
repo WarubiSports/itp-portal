@@ -24,18 +24,18 @@ export const LocationCard = ({ location }: { location: ITPLocation }) => {
   const Icon = config.icon;
 
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">
+    <div className="flex items-start gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-elevated)] text-[var(--color-text-secondary)]">
         <Icon size={20} />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
           {config.label}
         </p>
-        <p className="font-medium text-zinc-900 dark:text-zinc-100">
+        <p className="font-medium text-[var(--color-text)]">
           {location.name}
         </p>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-[var(--color-text-secondary)]">
           {location.address}
         </p>
         {location.maps_url && (
@@ -43,7 +43,7 @@ export const LocationCard = ({ location }: { location: ITPLocation }) => {
             href={location.maps_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-1.5 inline-flex items-center gap-1 text-sm font-medium text-[#ED1C24] hover:underline"
+            className="mt-1.5 inline-flex items-center gap-1 text-sm font-medium text-[var(--color-brand)] hover:underline"
           >
             Maps <ExternalLink size={12} />
           </a>

@@ -121,13 +121,13 @@ export default async function PlayerPage({ params }: Props) {
     <>
       {player.travel_arrangements && (
         <section className="px-4 pb-6">
-          <div className="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/40">
+          <div className="flex items-start gap-3 rounded-xl border border-amber-700/30 bg-amber-900/20 p-4">
             <span className="mt-0.5 text-lg">🚐</span>
             <div>
-              <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+              <p className="text-sm font-semibold text-amber-200">
                 Pick-up
               </p>
-              <p className="text-sm text-amber-800 dark:text-amber-300">
+              <p className="text-sm text-amber-300">
                 {player.travel_arrangements}
               </p>
             </div>
@@ -182,10 +182,10 @@ export default async function PlayerPage({ params }: Props) {
       {/* Good to Know */}
       {startDate && endDate && (
         <section className="px-4 pb-8">
-          <h2 className="mb-3 text-lg font-bold text-zinc-900 dark:text-zinc-50">
+          <h2 className="mb-3 text-lg font-bold text-[var(--color-text)] font-[family-name:var(--font-outfit)]">
             Good to Know
           </h2>
-          <div className="rounded-xl border border-zinc-200 bg-white divide-y divide-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:divide-zinc-700">
+          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] divide-y divide-[var(--color-border)]">
             {/* Weather */}
             <WeatherForecast startDate={startDate} endDate={endDate} />
 
@@ -194,35 +194,35 @@ export default async function PlayerPage({ params }: Props) {
               href={`https://wa.me/491602717912?text=${encodeURIComponent(`Hi Thomas, I'm ${player.first_name} ${player.last_name} and I'm coming for a trial at the 1.FC Köln ITP. I have a question:`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 p-4 transition-colors active:bg-zinc-50 dark:active:bg-zinc-700/50"
+              className="flex items-center gap-3 p-4 transition-colors active:bg-[var(--color-surface-elevated)]"
             >
               <span className="text-lg">💬</span>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Message Thomas on WhatsApp</p>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">Questions? We&apos;re happy to help.</p>
+                <p className="text-sm font-medium text-[var(--color-text)]">Message Thomas on WhatsApp</p>
+                <p className="text-xs text-[var(--color-text-secondary)]">Questions? We&apos;re happy to help.</p>
               </div>
-              <span className="text-sm text-zinc-400">→</span>
+              <span className="text-sm text-[var(--color-text-muted)]">→</span>
             </a>
 
             {/* Emergency */}
             <details>
-              <summary className="flex cursor-pointer items-center gap-3 p-4 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+              <summary className="flex cursor-pointer items-center gap-3 p-4 text-sm font-medium text-[var(--color-text)]">
                 <span className="text-lg">🚨</span>
                 <span className="flex-1">Emergency Information</span>
-                <span className="text-xs text-zinc-400">Tap to expand</span>
+                <span className="text-xs text-[var(--color-text-muted)]">Tap to expand</span>
               </summary>
               <div className="space-y-2 px-4 pb-4 pt-1 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-zinc-500 dark:text-zinc-400">Emergency</span>
-                  <a href="tel:112" className="font-medium text-[#ED1C24]">112</a>
+                  <span className="text-[var(--color-text-secondary)]">Emergency</span>
+                  <a href="tel:112" className="font-medium text-[var(--color-brand)]">112</a>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-zinc-500 dark:text-zinc-400">Hospital</span>
-                  <a href="https://maps.google.com/?q=St.+Franziskus+Hospital+Köln" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 underline">St. Franziskus</a>
+                  <span className="text-[var(--color-text-secondary)]">Hospital</span>
+                  <a href="https://maps.google.com/?q=St.+Franziskus+Hospital+Köln" target="_blank" rel="noopener noreferrer" className="text-blue-400 underline">St. Franziskus</a>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-zinc-500 dark:text-zinc-400">Thomas</span>
-                  <a href="tel:+491602717912" className="text-blue-600 dark:text-blue-400 underline">+49 160 2717912</a>
+                  <span className="text-[var(--color-text-secondary)]">Thomas</span>
+                  <a href="tel:+491602717912" className="text-blue-400 underline">+49 160 2717912</a>
                 </div>
               </div>
             </details>
@@ -231,30 +231,30 @@ export default async function PlayerPage({ params }: Props) {
       )}
 
       <section className="px-4 pb-12">
-        <h2 className={`mb-1 text-lg font-bold ${player.accommodation_type === "hotel" ? "text-[#ED1C24]" : "text-zinc-900 dark:text-zinc-50"}`}>
+        <h2 className={`mb-1 text-lg font-bold font-[family-name:var(--font-outfit)] ${player.accommodation_type === "hotel" ? "text-[var(--color-brand)]" : "text-[var(--color-text)]"}`}>
           {player.accommodation_type === "hotel" ? "Your Hotel Options" : "Recommended Hotels"}
         </h2>
-        <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mb-4 text-sm text-[var(--color-text-secondary)]">
           {player.accommodation_type === "hotel"
             ? "All options are within minutes of the training facility. Book directly for the best rates."
             : "Convenient options for visiting families, all near the training facility."}
         </p>
         <div className="flex flex-col gap-3">
-          <div className="rounded-xl border border-zinc-200 bg-white divide-y divide-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:divide-zinc-700">
+          <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] divide-y divide-[var(--color-border)]">
             <a href="https://hotel-koeln-junkersdorf.dorint.com/en/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4">
               <span className="text-lg">🏨</span>
-              <span className="flex-1 font-medium text-zinc-900 dark:text-zinc-100">Essential by Dorint Junkersdorf</span>
-              <span className="text-sm font-medium text-[#ED1C24]">→</span>
+              <span className="flex-1 font-medium text-[var(--color-text)]">Essential by Dorint Junkersdorf</span>
+              <span className="text-sm font-medium text-[var(--color-brand)]">→</span>
             </a>
             <a href="https://www.garten-hotel.de/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4">
               <span className="text-lg">🏨</span>
-              <span className="flex-1 font-medium text-zinc-900 dark:text-zinc-100">Garten-Hotel Ponick</span>
-              <span className="text-sm font-medium text-[#ED1C24]">→</span>
+              <span className="flex-1 font-medium text-[var(--color-text)]">Garten-Hotel Ponick</span>
+              <span className="text-sm font-medium text-[var(--color-brand)]">→</span>
             </a>
             <a href="https://www.leonardo-hotels.com/cologne/leonardo-royal-hotel-koln-am-stadtwald" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4">
               <span className="text-lg">🏨</span>
-              <span className="flex-1 font-medium text-zinc-900 dark:text-zinc-100">Leonardo Royal Hotel Köln — Am Stadtwald</span>
-              <span className="text-sm font-medium text-[#ED1C24]">→</span>
+              <span className="flex-1 font-medium text-[var(--color-text)]">Leonardo Royal Hotel Köln — Am Stadtwald</span>
+              <span className="text-sm font-medium text-[var(--color-brand)]">→</span>
             </a>
           </div>
         </div>

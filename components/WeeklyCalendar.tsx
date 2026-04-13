@@ -10,20 +10,18 @@ type ContactInfo = {
   photo_url?: string;
 };
 
-const formatTime = (time?: string): string => {
+function fmtTime(time?: string): string {
   if (!time) return "";
-  if (time.includes("T")) {
-    const d = new Date(time);
-    return d.toLocaleTimeString("en-GB", {
-      timeZone: "Europe/Berlin",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-  }
-  const parts = time.split(":");
-  return `${parts[0]}:${parts[1]}`;
-};
+  if (/^\d{2}:\d{2}/.test(time)) return time.substring(0, 5);
+  const d = new Date(time);
+  if (isNaN(d.getTime())) return time.substring(0, 5);
+  return d.toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Berlin",
+    hour12: false,
+  });
+}
 
 const toDateStr = (d: Date): string => {
   const y = d.getFullYear();
@@ -57,16 +55,16 @@ const isToday = (dateStr: string): boolean => {
 };
 
 const typeIcons: Record<string, string> = {
-  team_training: "⚽",
-  training: "⚽",
-  individual_training: "🏋️",
-  gym: "🏋️",
-  match: "🏟️",
-  tournament: "🏟️",
-  video_session: "🎬",
-  medical: "🏥",
-  airport_pickup: "✈️",
-  team_activity: "👥",
+  team_training: "\u26BD",
+  training: "\u26BD",
+  individual_training: "\uD83C\uDFCB\uFE0F",
+  gym: "\uD83C\uDFCB\uFE0F",
+  match: "\uD83C\uDFDF\uFE0F",
+  tournament: "\uD83C\uDFDF\uFE0F",
+  video_session: "\uD83C\uDFAC",
+  medical: "\uD83C\uDFE5",
+  airport_pickup: "\u2708\uFE0F",
+  team_activity: "\uD83D\uDC65",
 };
 
 const getIcon = (type: string): string | null => typeIcons[type] || null;
@@ -85,10 +83,10 @@ export const WeeklyCalendar = ({
   if (!startDate || !endDate) {
     return (
       <section className="px-4 pb-8">
-        <h2 className="mb-4 text-lg font-bold text-zinc-900 dark:text-zinc-50">
+        <h2 className="mb-4 text-lg font-bold text-[var(--color-text)] font-[family-name:var(--font-outfit)]">
           Your Schedule
         </h2>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-[var(--color-text-secondary)]">
           Visit dates not yet confirmed.
         </p>
       </section>
@@ -105,13 +103,12 @@ export const WeeklyCalendar = ({
   }
   for (const [, dayEvents] of eventsByDate) {
     dayEvents.sort((a, b) => {
-      const timeA = formatTime(a.start_time);
-      const timeB = formatTime(b.start_time);
+      const timeA = fmtTime(a.start_time);
+      const timeB = fmtTime(b.start_time);
       return timeA.localeCompare(timeB);
     });
   }
 
-  // Resolve contacts for an event
   const getEventContacts = (event: CalendarEvent): ContactInfo[] => {
     const ids = (event.contact_ids && Array.isArray(event.contact_ids) && event.contact_ids.length > 0)
       ? event.contact_ids
@@ -121,7 +118,7 @@ export const WeeklyCalendar = ({
 
   return (
     <section className="px-4 pb-8">
-      <h2 className="mb-4 text-lg font-bold text-zinc-900 dark:text-zinc-50">
+      <h2 className="mb-4 text-lg font-bold text-[var(--color-text)] font-[family-name:var(--font-outfit)]">
         Your Schedule
       </h2>
 
@@ -132,28 +129,26 @@ export const WeeklyCalendar = ({
 
           return (
             <div key={dateStr}>
-              {/* Day header */}
               <div className="mb-2 flex items-center gap-2">
                 <p
                   className={`text-sm font-semibold ${
                     today
-                      ? "text-[#ED1C24]"
-                      : "text-zinc-900 dark:text-zinc-100"
+                      ? "text-[var(--color-brand)]"
+                      : "text-[var(--color-text)]"
                   }`}
                 >
                   {formatDayHeader(dateStr)}
                 </p>
                 {today && (
-                  <span className="rounded-full bg-[#ED1C24] px-2 py-0.5 text-[10px] font-semibold text-white">
+                  <span className="rounded-full bg-[var(--color-brand)] px-2 py-0.5 text-[10px] font-semibold text-white">
                     Today
                   </span>
                 )}
               </div>
 
-              {/* Events */}
               {dayEvents.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-zinc-200 px-4 py-3 dark:border-zinc-700">
-                  <p className="text-sm text-zinc-400 dark:text-zinc-500">
+                <div className="rounded-xl border border-dashed border-[var(--color-border)] px-4 py-3">
+                  <p className="text-sm text-[var(--color-text-muted)]">
                     No activities scheduled
                   </p>
                 </div>
@@ -162,66 +157,62 @@ export const WeeklyCalendar = ({
                   {dayEvents.map((event) => {
                     const contacts = getEventContacts(event);
                     const icon = getIcon(event.type);
-                    const timeStr = formatTime(event.start_time);
-                    const endTimeStr = formatTime(event.end_time);
+                    const timeStr = fmtTime(event.start_time);
+                    const endTimeStr = fmtTime(event.end_time);
 
                     return (
                       <div
                         key={event.id}
                         className={`rounded-xl border p-4 ${
                           today
-                            ? "border-[#ED1C24]/20 bg-red-50/40 dark:border-[#ED1C24]/10 dark:bg-red-950/10"
-                            : "border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800"
+                            ? "border-[var(--color-brand)]/20 bg-[var(--color-brand-glow)]"
+                            : "border-[var(--color-border)] bg-[var(--color-surface)]"
                         }`}
                       >
                         <div className="flex gap-3">
-                          {/* Time column */}
                           {timeStr && (
                             <div className="flex w-12 shrink-0 flex-col items-center pt-0.5">
-                              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                              <span className="text-sm font-semibold text-[var(--color-text)]">
                                 {timeStr}
                               </span>
                               {endTimeStr && (
-                                <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                                <span className="text-xs text-[var(--color-text-muted)]">
                                   {endTimeStr}
                                 </span>
                               )}
                             </div>
                           )}
 
-                          {/* Divider */}
                           {timeStr && (
-                            <div className="w-px shrink-0 bg-zinc-200 dark:bg-zinc-700" />
+                            <div className="w-px shrink-0 bg-[var(--color-border)]" />
                           )}
 
-                          {/* Content */}
                           <div className="min-w-0 flex-1">
                             <div className="flex items-start gap-2">
                               {icon && <span className="text-base">{icon}</span>}
                               <div className="min-w-0 flex-1">
-                                <p className="font-medium text-zinc-900 dark:text-zinc-100">
+                                <p className="font-medium text-[var(--color-text)]">
                                   {event.title}
                                 </p>
                                 {event.location && (
-                                  <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
-                                    📍 {event.location}
+                                  <p className="mt-0.5 text-sm text-[var(--color-text-secondary)]">
+                                    {event.location}
                                   </p>
                                 )}
                                 {event.description && (
-                                  <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                                  <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
                                     {event.description}
                                   </p>
                                 )}
                               </div>
                             </div>
 
-                            {/* Contact chips with photos */}
                             {contacts.length > 0 && (
                               <div className="mt-2 flex flex-wrap gap-2">
                                 {contacts.map((c) => (
                                   <div
                                     key={c.id}
-                                    className="flex items-center gap-1.5 rounded-full bg-zinc-100 py-1 pl-1 pr-2.5 dark:bg-zinc-700"
+                                    className="flex items-center gap-1.5 rounded-full bg-[var(--color-surface-elevated)] py-1 pl-1 pr-2.5"
                                   >
                                     {c.photo_url ? (
                                       <img
@@ -230,13 +221,13 @@ export const WeeklyCalendar = ({
                                         className="h-5 w-5 rounded-full object-cover"
                                       />
                                     ) : (
-                                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
-                                        <span className="text-[9px] font-semibold text-[#ED1C24]">
+                                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-brand-glow)]">
+                                        <span className="text-[9px] font-semibold text-[var(--color-brand)]">
                                           {c.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
                                         </span>
                                       </div>
                                     )}
-                                    <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                                    <span className="text-xs font-medium text-[var(--color-text-secondary)]">
                                       {c.name.split(" ")[0]}
                                     </span>
                                   </div>
@@ -244,9 +235,8 @@ export const WeeklyCalendar = ({
                               </div>
                             )}
 
-                            {/* Fallback: legacy contact text if no structured contacts */}
                             {contacts.length === 0 && event.contact_name && (
-                              <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">
+                              <p className="mt-1.5 text-sm text-[var(--color-text-secondary)]">
                                 with {event.contact_name}
                               </p>
                             )}

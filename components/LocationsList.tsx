@@ -18,7 +18,7 @@ export const LocationsList = ({ locations }: { locations: ITPLocation[] }) => {
 
   return (
     <section className="px-4 pb-12">
-      <h2 className="mb-4 text-lg font-bold text-zinc-900 dark:text-zinc-50">
+      <h2 className="mb-4 text-lg font-bold text-[var(--color-text)] font-[family-name:var(--font-outfit)]">
         Key Locations
       </h2>
       <div className="flex flex-col gap-3">

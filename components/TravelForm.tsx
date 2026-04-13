@@ -106,24 +106,24 @@ export const TravelForm = ({ prospectId, initial, firstActivity }: Props) => {
 
   return (
     <section className="px-4 pb-6">
-      <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
+      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
         <div className="mb-4 flex items-center gap-2">
-          <Plane size={18} className="text-zinc-500" />
-          <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+          <Plane size={18} className="text-[var(--color-text-secondary)]" />
+          <h3 className="text-base font-semibold text-[var(--color-text)]">
             Your Travel Details
           </h3>
         </div>
-        <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mb-4 text-sm text-[var(--color-text-secondary)]">
           Let us know when you&apos;re arriving so we can arrange transport.
         </p>
 
         {firstActivity && (
-          <div className="mb-4 flex items-start gap-2.5 rounded-lg bg-zinc-50 p-3 dark:bg-zinc-700/50">
+          <div className="mb-4 flex items-start gap-2.5 rounded-lg bg-[var(--color-surface-elevated)] p-3">
             <span className="mt-0.5 text-sm">📍</span>
-            <p className="text-sm text-zinc-600 dark:text-zinc-300">
+            <p className="text-sm text-[var(--color-text-secondary)]">
               Your first activity is <strong>{firstActivity.title}</strong> on {firstActivity.day} at{' '}
               <strong>{firstActivity.location}</strong>
-              {firstActivity.address && <span className="text-zinc-400 dark:text-zinc-500"> ({firstActivity.address})</span>}
+              {firstActivity.address && <span className="text-zinc-400 dark:text-[var(--color-text-secondary)]"> ({firstActivity.address})</span>}
               {firstActivity.mapsUrl && (
                 <>{' '}<a href={firstActivity.mapsUrl} target="_blank" rel="noopener noreferrer" className="text-[#ED1C24] underline">Maps</a></>
               )}
@@ -170,8 +170,8 @@ export const TravelForm = ({ prospectId, initial, firstActivity }: Props) => {
                   onClick={() => update("arrival_airport", a.value)}
                   className={`rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors ${
                     form.arrival_airport === a.value
-                      ? "border-[#ED1C24] bg-red-50 text-[#ED1C24] dark:bg-red-950/30 dark:text-red-400"
-                      : "border-zinc-200 text-zinc-600 hover:border-zinc-300 dark:border-zinc-600 dark:text-zinc-300"
+                      ? "border-[var(--color-brand)] bg-[var(--color-brand-glow)] text-[var(--color-brand)]"
+                      : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-muted)]"
                   }`}
                 >
                   {a.label}
@@ -195,8 +195,8 @@ export const TravelForm = ({ prospectId, initial, firstActivity }: Props) => {
                   onClick={() => handlePickup(opt.value)}
                   className={`rounded-lg border px-3 py-2.5 text-sm font-medium text-left transition-colors ${
                     pickupChoice === opt.value
-                      ? "border-[#ED1C24] bg-red-50 text-[#ED1C24] dark:bg-red-950/30 dark:text-red-400"
-                      : "border-zinc-200 text-zinc-600 hover:border-zinc-300 dark:border-zinc-600 dark:text-zinc-300"
+                      ? "border-[var(--color-brand)] bg-[var(--color-brand-glow)] text-[var(--color-brand)]"
+                      : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-muted)]"
                   }`}
                 >
                   {opt.label}
@@ -232,7 +232,7 @@ export const TravelForm = ({ prospectId, initial, firstActivity }: Props) => {
         </div>
 
         {error && (
-          <p className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>
+          <p className="mt-3 text-sm text-red-400">{error}</p>
         )}
 
         <button
