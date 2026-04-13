@@ -62,7 +62,6 @@ export const FileUpload = ({
     const file = e.target.files?.[0];
     if (file) {
       handleFile(file);
-      // Reset capture attribute so "Choose File" still works normally
       if (fileRef.current) fileRef.current.removeAttribute("capture");
     }
   };
@@ -71,23 +70,23 @@ export const FileUpload = ({
 
   return (
     <div>
-      <p className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+      <p className="mb-2 text-sm font-medium text-[var(--color-text-secondary)]">
         {label}
       </p>
       <div
         className={`relative rounded-xl border-2 border-dashed p-4 text-center transition-colors ${
           isUploaded
-            ? "border-green-300 bg-green-50 dark:border-green-700 dark:bg-green-950/20"
-            : "border-zinc-200 bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800/50"
+            ? "border-green-700 bg-green-950/20"
+            : "border-[var(--color-border)] bg-[var(--color-surface)]"
         }`}
       >
         {uploading ? (
-          <div className="flex items-center justify-center gap-2 py-2 text-sm text-zinc-500">
+          <div className="flex items-center justify-center gap-2 py-2 text-sm text-[var(--color-text-secondary)]">
             <Loader2 size={16} className="animate-spin" /> Uploading...
           </div>
         ) : isUploaded ? (
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm text-green-700 dark:text-green-400">
+            <div className="flex items-center gap-2 text-sm text-green-400">
               <Check size={16} />
               <span>{fileName || "Uploaded"}</span>
             </div>
@@ -98,7 +97,7 @@ export const FileUpload = ({
                 setFileName("");
                 if (fileRef.current) fileRef.current.value = "";
               }}
-              className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+              className="text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
             >
               <X size={16} />
             </button>
@@ -109,7 +108,7 @@ export const FileUpload = ({
               <button
                 type="button"
                 onClick={() => fileRef.current?.click()}
-                className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-zinc-700 shadow-sm ring-1 ring-zinc-200 hover:bg-zinc-50 dark:bg-zinc-700 dark:text-zinc-200 dark:ring-zinc-600"
+                className="flex items-center gap-2 rounded-lg bg-[var(--color-surface-elevated)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] ring-1 ring-[var(--color-border)] hover:bg-[var(--color-surface)]"
               >
                 <Upload size={14} /> Choose File
               </button>
@@ -121,12 +120,12 @@ export const FileUpload = ({
                     fileRef.current.click();
                   }
                 }}
-                className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-zinc-700 shadow-sm ring-1 ring-zinc-200 hover:bg-zinc-50 dark:bg-zinc-700 dark:text-zinc-200 dark:ring-zinc-600"
+                className="flex items-center gap-2 rounded-lg bg-[var(--color-surface-elevated)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] ring-1 ring-[var(--color-border)] hover:bg-[var(--color-surface)]"
               >
                 <Camera size={14} /> Take Photo
               </button>
             </div>
-            <p className="text-xs text-zinc-400">PDF, JPG, or PNG up to 10 MB</p>
+            <p className="text-xs text-[var(--color-text-muted)]">PDF, JPG, or PNG up to 10 MB</p>
           </div>
         )}
         <input
@@ -138,7 +137,7 @@ export const FileUpload = ({
         />
       </div>
       {error && (
-        <p className="mt-1 text-xs text-red-600 dark:text-red-400">{error}</p>
+        <p className="mt-1 text-xs text-red-400">{error}</p>
       )}
     </div>
   );

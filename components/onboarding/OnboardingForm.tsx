@@ -270,7 +270,7 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
 
   const renderSignDocuments = () => (
     <div>
-      <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
+      <p className="text-sm text-[var(--color-text-secondary)] mb-4">
         Please read and sign each document to continue.
       </p>
       <DocumentsList
@@ -323,8 +323,8 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
               onClick={() => update("arrival_airport", a.value)}
               className={`rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors ${
                 form.arrival_airport === a.value
-                  ? "border-[#ED1C24] bg-red-50 text-[#ED1C24] dark:bg-red-950/30 dark:text-red-400"
-                  : "border-zinc-200 text-zinc-600 hover:border-zinc-300 dark:border-zinc-600 dark:text-zinc-300"
+                  ? "border-[var(--color-brand)] bg-[var(--color-brand-glow)] text-[var(--color-brand)]"
+                  : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-muted)]"
               }`}
             >
               {a.label}
@@ -342,8 +342,8 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
               onClick={() => update("needs_pickup", val)}
               className={`rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors ${
                 form.needs_pickup === val
-                  ? "border-[#ED1C24] bg-red-50 text-[#ED1C24] dark:bg-red-950/30 dark:text-red-400"
-                  : "border-zinc-200 text-zinc-600 hover:border-zinc-300 dark:border-zinc-600 dark:text-zinc-300"
+                  ? "border-[var(--color-brand)] bg-[var(--color-brand-glow)] text-[var(--color-brand)]"
+                  : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-muted)]"
               }`}
             >
               {val ? "Yes, please" : "No, I'm set"}
@@ -360,7 +360,7 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
           onChange={(e) => update("whatsapp_number", e.target.value)}
           className="input"
         />
-        <p className="mt-1 text-xs text-zinc-400">
+        <p className="mt-1 text-xs text-[var(--color-text-muted)]">
           We use WhatsApp for quick communication during your trial.
         </p>
       </div>
@@ -371,7 +371,7 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
     <div className="space-y-4">
       <div>
         <label className="label">Equipment Size</label>
-        <p className="mb-2 text-xs text-zinc-400">
+        <p className="mb-2 text-xs text-[var(--color-text-muted)]">
           Note: US Medium = EU Large. Select your <strong>US size</strong>.
         </p>
         <div className="grid grid-cols-4 gap-2">
@@ -382,8 +382,8 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
               onClick={() => update("equipment_size", s)}
               className={`rounded-lg border px-3 py-3 text-sm font-medium transition-colors ${
                 form.equipment_size === s
-                  ? "border-[#ED1C24] bg-red-50 text-[#ED1C24] dark:bg-red-950/30 dark:text-red-400"
-                  : "border-zinc-200 text-zinc-600 hover:border-zinc-300 dark:border-zinc-600 dark:text-zinc-300"
+                  ? "border-[var(--color-brand)] bg-[var(--color-brand-glow)] text-[var(--color-brand)]"
+                  : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-muted)]"
               }`}
             >
               {s}
@@ -406,15 +406,15 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
               onClick={() => update("schengen_last_180_days", val)}
               className={`rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors ${
                 form.schengen_last_180_days === val
-                  ? "border-[#ED1C24] bg-red-50 text-[#ED1C24] dark:bg-red-950/30 dark:text-red-400"
-                  : "border-zinc-200 text-zinc-600 hover:border-zinc-300 dark:border-zinc-600 dark:text-zinc-300"
+                  ? "border-[var(--color-brand)] bg-[var(--color-brand-glow)] text-[var(--color-brand)]"
+                  : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-muted)]"
               }`}
             >
               {label}
             </button>
           ))}
         </div>
-        <p className="mt-1 text-xs text-zinc-400">
+        <p className="mt-1 text-xs text-[var(--color-text-muted)]">
           This helps us understand your visa situation for the Schengen 90/180 rule.
         </p>
       </div>
@@ -448,7 +448,7 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
 
   const renderDocuments = () => (
     <div className="space-y-5">
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="text-sm text-[var(--color-text-secondary)]">
         Upload clear photos or scans. Max 10 MB per file.
       </p>
       <FileUpload
@@ -481,8 +481,8 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
 
   const renderU18Forms = () => (
     <div className="space-y-5">
-      <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/40">
-        <p className="text-sm text-amber-800 dark:text-amber-300">
+      <div className="rounded-xl border border-amber-700/30 bg-amber-900/20 p-4">
+        <p className="text-sm text-amber-300">
           Since {prospect.first_name} is under 18, we need signed consent forms
           from a parent or legal guardian. Please download, print, sign, and
           re-upload each form.
@@ -491,13 +491,13 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
 
       <div className="space-y-3">
         <div>
-          <p className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <p className="mb-2 text-sm font-medium text-[var(--color-text-secondary)]">
             1. Vollmacht (Power of Attorney)
           </p>
           <a
             href="/vollmacht.pdf"
             download="Vollmacht.pdf"
-            className="inline-flex items-center gap-2 rounded-lg bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+            className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-surface-elevated)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)]"
           >
             <FileText size={16} /> Download Vollmacht PDF
           </a>
@@ -513,13 +513,13 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
 
       <div className="space-y-3">
         <div>
-          <p className="mb-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <p className="mb-2 text-sm font-medium text-[var(--color-text-secondary)]">
             2. Wellpass Gym Consent
           </p>
           <a
             href="/wellpass-consent.pdf"
             download="EGYM_Wellpass_Einverstaendniserklaerung.pdf"
-            className="inline-flex items-center gap-2 rounded-lg bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+            className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-surface-elevated)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)]"
           >
             <FileText size={16} /> Download Wellpass Consent PDF
           </a>
@@ -537,11 +537,11 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
 
   const renderConfirm = () => (
     <div className="space-y-4">
-      <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+      <h3 className="text-base font-semibold text-[var(--color-text)]">
         Please review your information
       </h3>
 
-      <div className="divide-y divide-zinc-100 rounded-xl border border-zinc-200 bg-white dark:divide-zinc-700 dark:border-zinc-700 dark:bg-zinc-800">
+      <div className="divide-y divide-[var(--color-border)] rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
         <SummaryRow label="Arrival" value={form.arrival_date ? `${form.arrival_date} at ${form.arrival_time || "TBD"}` : "Not set"} />
         <SummaryRow label="Flight" value={form.flight_number || "Not provided"} />
         <SummaryRow label="Arrival Point" value={ARRIVAL_POINTS.find((a) => a.value === form.arrival_airport)?.label || form.arrival_airport || "Not set"} />
@@ -572,9 +572,9 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
     <div className="px-4 pb-8">
       {/* Completed banner */}
       {submitted && (
-        <div className="mb-4 flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950/40">
-          <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-400" />
-          <p className="text-sm text-green-800 dark:text-green-300">
+        <div className="mb-4 flex items-center gap-3 rounded-xl border border-green-700/30 bg-green-900/20 p-4">
+          <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-green-400" />
+          <p className="text-sm text-green-300">
             Onboarding submitted. You can still update your details below.
           </p>
         </div>
@@ -591,10 +591,10 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
               <div
                 className={`flex h-8 w-8 items-center justify-center rounded-full text-xs transition-colors ${
                   isActive
-                    ? "bg-[#ED1C24] text-white"
+                    ? "bg-[var(--color-brand)] text-white"
                     : isDone
-                    ? "bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400"
-                    : "bg-zinc-100 text-zinc-400 dark:bg-zinc-800"
+                    ? "bg-green-900/40 text-green-400"
+                    : "bg-[var(--color-surface)] text-[var(--color-text-muted)]"
                 }`}
               >
                 {isDone ? <CheckCircle2 size={14} /> : <Icon size={14} />}
@@ -602,8 +602,8 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
               <span
                 className={`text-[10px] font-medium ${
                   isActive
-                    ? "text-zinc-900 dark:text-zinc-100"
-                    : "text-zinc-400"
+                    ? "text-[var(--color-text)]"
+                    : "text-[var(--color-text-muted)]"
                 }`}
               >
                 {label}
@@ -615,7 +615,7 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
 
       {/* Step content */}
       <div className="mb-6">
-        <h2 className="mb-4 text-lg font-bold text-zinc-900 dark:text-zinc-100">
+        <h2 className="mb-4 text-lg font-bold text-[var(--color-text)]">
           {stepLabels[step - 1]}
         </h2>
         {getStepContent()}
@@ -623,7 +623,7 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
 
       {/* Error */}
       {error && (
-        <p className="mb-4 text-sm text-red-600 dark:text-red-400">{error}</p>
+        <p className="mb-4 text-sm text-red-400">{error}</p>
       )}
 
       {/* Navigation */}
@@ -631,7 +631,7 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
         <button
           type="button"
           onClick={nextStep}
-          className="mb-2 w-full text-center text-sm text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
+          className="mb-2 w-full text-center text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors"
         >
           Skip — I&apos;ll fill this in later
         </button>
@@ -677,12 +677,12 @@ const SummaryRow = ({
   highlight?: boolean;
 }) => (
   <div className="flex items-center justify-between px-4 py-3">
-    <span className="text-sm text-zinc-500 dark:text-zinc-400">{label}</span>
+    <span className="text-sm text-[var(--color-text-secondary)]">{label}</span>
     <span
       className={`text-sm font-medium ${
         highlight
-          ? "text-amber-600 dark:text-amber-400"
-          : "text-zinc-900 dark:text-zinc-100"
+          ? "text-amber-400"
+          : "text-[var(--color-text)]"
       }`}
     >
       {value}
