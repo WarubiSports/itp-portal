@@ -236,7 +236,7 @@ export default async function PlayerPage({ params }: Props) {
         </p>
         <div className="flex flex-col gap-3">
           <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] divide-y divide-[var(--color-border)]">
-            <a href="https://hotel-koeln-junkersdorf.dorint.com/en/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4">
+            <a href="https://dorint.com/en/hotel-near-the-rheinenergie-stadium" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4">
               <span className="text-lg">🏨</span>
               <span className="flex-1 font-medium text-[var(--color-text)]">Essential by Dorint Junkersdorf</span>
               <span className="text-sm font-medium text-[var(--color-brand)]">→</span>
