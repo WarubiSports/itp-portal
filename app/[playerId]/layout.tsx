@@ -47,21 +47,7 @@ export default async function PlayerLayout({ params, children }: Props) {
       <main className="w-full max-w-[540px] min-h-screen lg:min-h-0 lg:my-8 lg:rounded-2xl lg:border lg:border-[var(--color-border)] lg:shadow-2xl lg:shadow-black/40 lg:overflow-hidden">
         <WelcomeHeader player={player} scoutInfo={scoutInfo} labelPrefix={labelPrefix} />
         {showOnboarding && source === "prospect" ? (
-          <>
-            <TabNav playerId={playerId} completed={!!player.onboarding_completed_at} />
-            {/* Preseason banner only for accepted/placed (program-bound) prospects, not trial (scheduled). */}
-            {["accepted", "placed"].includes(player.status || "") && (
-              <section className="px-4 pb-4">
-                <div className="flex items-center gap-3 rounded-xl border border-blue-700/30 bg-blue-900/20 p-4">
-                  <span className="text-lg">📅</span>
-                  <p className="text-sm text-blue-300">
-                    <span className="font-semibold">Preseason starts July 6, 2026.</span>{" "}
-                    Please complete your onboarding before then.
-                  </p>
-                </div>
-              </section>
-            )}
-          </>
+          <TabNav playerId={playerId} completed={!!player.onboarding_completed_at} />
         ) : null}
         {children}
       </main>

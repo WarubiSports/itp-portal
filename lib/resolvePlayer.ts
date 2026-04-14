@@ -38,6 +38,26 @@ export type ResolvedPlayer =
   | { source: "prospect"; data: PlayerRecord; raw: TrialProspect };
 
 /**
+ * The three player-facing phases in the men's ITP journey. Drives which
+ * info-page layout to render.
+ *
+ * - trial: pre-acceptance (coming for a tryout). Sees trial schedule, hotels,
+ *   document signing, travel form.
+ * - committed: accepted but not yet promoted. Sees preseason prep items:
+ *   payment, passport uploads, U18 legal forms, housing assignment status.
+ *   Hotel recommendations and trial schedule hidden.
+ * - in-program: promoted to players. Sees the full ProgramView.
+ */
+export type Phase = "trial" | "committed" | "in-program";
+
+export function derivePhase(resolved: ResolvedPlayer): Phase {
+  if (resolved.source === "player") return "in-program";
+  return ["accepted", "placed"].includes(resolved.raw.status)
+    ? "committed"
+    : "trial";
+}
+
+/**
  * Resolves a URL id to a player record. The same id (UUID) may refer to:
  * 1. An in-program player's row (`players.id`)
  * 2. An in-program player whose `prospect_id` was preserved from the trial
