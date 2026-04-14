@@ -157,7 +157,7 @@ export const CommittedView = async ({ prospect }: Props) => {
         signedDocs={signedDocs}
         playerId={playerId}
         phase="program"
-        trialStartDate={prospect.trial_start_date}
+        prospectCreatedAt={prospect.created_at}
       />
 
       {/* Payment */}

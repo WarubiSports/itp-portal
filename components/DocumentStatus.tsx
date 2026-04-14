@@ -6,16 +6,16 @@ export const DocumentStatus = ({
   signedDocs,
   playerId,
   phase = 'trial',
-  trialStartDate,
+  prospectCreatedAt,
 }: {
   signedDocs: { document_type: string; signed_at: string }[]
   playerId: string
   /** Which phase's document set to require. Defaults to 'trial'. */
   phase?: DocumentPhase
-  /** Used to respect any doc's effectiveFrom cutoff. */
-  trialStartDate?: string | null
+  /** Prospect's created_at — used to respect any doc's effectiveFrom cutoff. */
+  prospectCreatedAt?: string | null
 }) => {
-  const requiredDocs = getDocumentsForPhase(phase, trialStartDate)
+  const requiredDocs = getDocumentsForPhase(phase, prospectCreatedAt)
   const signedSet = new Set(signedDocs.map((d) => d.document_type))
   const signedCount = requiredDocs.filter((d) => signedSet.has(d.type)).length
   const total = requiredDocs.length

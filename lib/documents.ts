@@ -84,10 +84,12 @@ export const DOCUMENT_CONTENT: Record<string, DocumentDefinition> = {
     title: 'Medical Treatment Consent',
     phases: ['trial', 'program'],
     // Added 2026-04-14 after porting from the women's app. Only required
-    // for players whose trial starts on or after the cutoff so in-flight
-    // prospects (Jadon: Apr 16, etc.) aren't surprised by a new doc
-    // mid-journey. Drop this field once all pre-cutoff prospects have
-    // cleared their trials and been placed.
+    // for prospects created on or after this date — anyone already in
+    // the pipeline (Jadon: trial Apr 16, etc.) is grandfathered with
+    // the pre-cutoff doc set. The gate self-sunsets: once pre-cutoff
+    // prospects finish their journey (placed → in-program / rejected),
+    // no one is grandfathered anymore. Safe to leave this field in
+    // place forever — no manual cleanup needed.
     effectiveFrom: '2026-04-23',
     sections: [
       {
@@ -174,23 +176,33 @@ export const DOCUMENT_CONTENT: Record<string, DocumentDefinition> = {
  * Returns the required documents for a given player-journey phase,
  * preserving definition order (which is also the display/signing order).
  *
- * Pass the player's `trial_start_date` as `referenceDate` to respect any
- * doc's `effectiveFrom` cutoff. Prospects whose trials were scheduled
- * before a doc's cutoff are exempt from signing it. Omit `referenceDate`
- * to ignore cutoffs (e.g. in staff-side preview contexts).
+ * Pass the prospect's `created_at` as `prospectCreatedAt` to respect
+ * any doc's `effectiveFrom` cutoff. Prospects created before a doc's
+ * cutoff are grandfathered into the pre-cutoff set. `created_at` is
+ * chosen over `trial_start_date` because it's monotonically increasing
+ * and has no nulls, so the gate self-sunsets: after the cutoff date,
+ * every new prospect naturally gets the new doc and every pre-cutoff
+ * prospect eventually ages out (placed / rejected / withdrawn → no
+ * more signing UI). No manual cleanup required.
+ *
+ * Omit the second arg to ignore cutoffs (e.g. staff preview).
  */
 export function getDocumentsForPhase(
   phase: DocumentPhase,
-  referenceDate?: string | null
+  prospectCreatedAt?: string | null
 ): { type: string; title: string }[] {
+  // Normalize timestamp → YYYY-MM-DD for string comparison
+  const createdDate = prospectCreatedAt
+    ? prospectCreatedAt.slice(0, 10)
+    : null;
+
   return Object.entries(DOCUMENT_CONTENT)
     .filter(([, doc]) => {
       if (!doc.phases.includes(phase)) return false;
-      if (doc.effectiveFrom && referenceDate !== undefined) {
-        // Unknown trial date (null) is treated as pre-cutoff — protects
-        // existing committed prospects whose trials weren't formally
-        // recorded from seeing a new doc appear mid-flight.
-        if (!referenceDate || referenceDate < doc.effectiveFrom) {
+      if (doc.effectiveFrom && prospectCreatedAt !== undefined) {
+        // Null created_at is impossible in practice (DB default), but
+        // defensively grandfather it as pre-cutoff.
+        if (!createdDate || createdDate < doc.effectiveFrom) {
           return false;
         }
       }

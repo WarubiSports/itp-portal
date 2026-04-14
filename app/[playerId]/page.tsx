@@ -164,7 +164,7 @@ export default async function PlayerPage({ params }: Props) {
       <DocumentStatus
         signedDocs={signedDocs}
         playerId={playerId}
-        trialStartDate={player.trial_start_date}
+        prospectCreatedAt={player.created_at}
       />
       <PaymentSection
         paymentLink={player.payment_link}
