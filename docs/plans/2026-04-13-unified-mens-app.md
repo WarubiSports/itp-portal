@@ -115,3 +115,5 @@ Vite app stays deployed for **30 days minimum** after Phase 4 cutover.
 _Updated as phases complete._
 
 - 2026-04-13: Plan committed. Starting Phase 0.
+- 2026-04-13: **Phase 0 complete.** DB column `players.prospect_id` added. Staff App promotion now preserves the UUID going forward. `lib/resolvePlayer.ts` shipped. 4 historical players backfilled (Jonah, Conner, Nathaniel, Lucas-pending). Zero user-facing changes.
+- 2026-04-13: **Phase 1 complete.** Resolver wired into routes. In-program players visiting their preserved URL now see a `ProgramView` (schedule, payment, locations, contacts, emergency). Prospects see the existing trial flow unchanged. Onboarding page redirects players to the main view. Verified: Jonah's old trial URL resolves 200 → his player record. Jadon's prospect URL still 200 → trial view.
