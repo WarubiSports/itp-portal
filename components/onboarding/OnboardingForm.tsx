@@ -52,7 +52,7 @@ const REQUIRED_DOCS = Object.entries(DOCUMENT_CONTENT).map(([type, doc]) => ({
   title: doc.title,
 }));
 
-export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
+export const OnboardingForm = ({ prospect, isUnder18, phase }: Props) => {
   // Trial: Sign + Travel + Equipment + Confirm (4 steps, U18 adds no extra step since no legal forms for trials)
   // Program: Sign + Travel + Equipment + Documents [+ U18 Forms if minor] + Confirm
   const totalSteps = phase === "trial" ? 4 : isUnder18 ? 6 : 5;
