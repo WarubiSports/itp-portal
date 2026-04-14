@@ -20,6 +20,8 @@ import {
 type Props = {
   prospect: TrialProspect;
   isUnder18: boolean;
+  /** 'trial' = short flow (sign/travel/equipment/confirm). 'program' = full flow with passport + U18 legal forms. */
+  phase: "trial" | "program";
 };
 
 const ARRIVAL_POINTS = [
@@ -51,7 +53,9 @@ const REQUIRED_DOCS = Object.entries(DOCUMENT_CONTENT).map(([type, doc]) => ({
 }));
 
 export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
-  const totalSteps = isUnder18 ? 6 : 5;
+  // Trial: Sign + Travel + Equipment + Confirm (4 steps, U18 adds no extra step since no legal forms for trials)
+  // Program: Sign + Travel + Equipment + Documents [+ U18 Forms if minor] + Confirm
+  const totalSteps = phase === "trial" ? 4 : isUnder18 ? 6 : 5;
   const [step, setStep] = useState(prospect.onboarding_step || 1);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(!!prospect.onboarding_completed_at);
@@ -153,6 +157,7 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
   };
 
   const validateStep = (currentStep: number): string | null => {
+    // Steps 1-3 share validation for both phases
     switch (currentStep) {
       case 1: {
         const allSigned = REQUIRED_DOCS.every((d) =>
@@ -167,19 +172,23 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
         if (!form.equipment_size) return "Please select your equipment size";
         if (form.schengen_last_180_days === null) return "Please answer the Schengen question";
         return null;
-      case 4:
-        if (!passportPath) return "Please upload your passport";
-        if (isUnder18 && !parent1PassportPath) return "Please upload Parent 1 passport";
-        return null;
-      case 5:
-        if (isUnder18) {
-          if (!vollmachtPath) return "Please upload the signed Vollmacht";
-          if (!wellpassPath) return "Please upload the signed Wellpass Consent";
-        }
-        return null;
-      default:
-        return null;
     }
+    // Program-only steps
+    if (phase === "program") {
+      switch (currentStep) {
+        case 4:
+          if (!passportPath) return "Please upload your passport";
+          if (isUnder18 && !parent1PassportPath) return "Please upload Parent 1 passport";
+          return null;
+        case 5:
+          if (isUnder18) {
+            if (!vollmachtPath) return "Please upload the signed Vollmacht";
+            if (!wellpassPath) return "Please upload the signed Wellpass Consent";
+          }
+          return null;
+      }
+    }
+    return null;
   };
 
   const nextStep = async () => {
@@ -246,16 +255,31 @@ export const OnboardingForm = ({ prospect, isUnder18 }: Props) => {
   };
 
   // Step indicators
-  const stepLabels = isUnder18
-    ? ["Sign", "Travel", "Equipment", "Documents", "U18 Forms", "Confirm"]
-    : ["Sign", "Travel", "Equipment", "Documents", "Confirm"];
+  const stepLabels = phase === "trial"
+    ? ["Sign", "Travel", "Equipment", "Confirm"]
+    : isUnder18
+      ? ["Sign", "Travel", "Equipment", "Documents", "U18 Forms", "Confirm"]
+      : ["Sign", "Travel", "Equipment", "Documents", "Confirm"];
 
-  const stepIcons = isUnder18
-    ? [PenTool, Plane, Shirt, FileText, ShieldCheck, CheckCircle2]
-    : [PenTool, Plane, Shirt, FileText, CheckCircle2];
+  const stepIcons = phase === "trial"
+    ? [PenTool, Plane, Shirt, CheckCircle2]
+    : isUnder18
+      ? [PenTool, Plane, Shirt, FileText, ShieldCheck, CheckCircle2]
+      : [PenTool, Plane, Shirt, FileText, CheckCircle2];
 
   // Determine which step content to render
   const getStepContent = () => {
+    if (phase === "trial") {
+      // Trial flow: 1=Sign, 2=Travel, 3=Equipment, 4=Confirm
+      switch (step) {
+        case 1: return renderSignDocuments();
+        case 2: return renderTravel();
+        case 3: return renderEquipment();
+        case 4: return renderConfirm();
+        default: return null;
+      }
+    }
+    // Program flow
     if (!isUnder18 && step === 5) return renderConfirm();
     switch (step) {
       case 1: return renderSignDocuments();

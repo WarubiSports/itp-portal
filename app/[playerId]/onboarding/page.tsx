@@ -37,7 +37,11 @@ export default async function OnboardingPage({ params }: Props) {
   );
   const isUnder18 = ageAtTrial < 18;
 
+  // Trial phase = pre-acceptance. Program phase = accepted/placed.
+  const phase: "trial" | "program" =
+    player.status === "scheduled" ? "trial" : "program";
+
   return (
-    <OnboardingForm prospect={player} isUnder18={isUnder18} />
+    <OnboardingForm prospect={player} isUnder18={isUnder18} phase={phase} />
   );
 }
