@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { TrialProspect } from "@/lib/types";
+import type { PlayerRecord } from "@/lib/resolvePlayer";
 
 const formatDate = (dateStr?: string): string => {
   if (!dateStr) return "";
@@ -11,19 +11,20 @@ const getInitials = (first: string, last: string) =>
   `${first.charAt(0)}${last.charAt(0)}`.toUpperCase();
 
 interface WelcomeHeaderProps {
-  prospect: TrialProspect;
+  player: PlayerRecord;
   scoutInfo?: { name: string; affiliation: string | null } | null;
+  labelPrefix?: string;
 }
 
-export const WelcomeHeader = ({ prospect, scoutInfo }: WelcomeHeaderProps) => {
-  const trialRange =
-    prospect.trial_start_date && prospect.trial_end_date
-      ? `${formatDate(prospect.trial_start_date)} – ${formatDate(prospect.trial_end_date)}`
-      : prospect.trial_start_date
-      ? `Starting ${formatDate(prospect.trial_start_date)}`
+export const WelcomeHeader = ({ player, scoutInfo, labelPrefix = "Trial" }: WelcomeHeaderProps) => {
+  const range =
+    player.start_date && player.end_date
+      ? `${formatDate(player.start_date)} – ${formatDate(player.end_date)}`
+      : player.start_date
+      ? `Starting ${formatDate(player.start_date)}`
       : null;
 
-  const initials = getInitials(prospect.first_name, prospect.last_name);
+  const initials = getInitials(player.first_name, player.last_name);
 
   return (
     <div className="relative overflow-hidden">
@@ -86,10 +87,10 @@ export const WelcomeHeader = ({ prospect, scoutInfo }: WelcomeHeaderProps) => {
           </div>
           <div>
             <h1 className="text-xl font-bold text-white font-[family-name:var(--font-outfit)] tracking-tight">
-              Welcome, {prospect.first_name}
+              Welcome, {player.first_name}
             </h1>
             <span className="inline-block mt-1 text-xs font-medium text-white/80 bg-white/10 backdrop-blur-sm rounded-full px-3 py-0.5">
-              {trialRange ? `Trial: ${trialRange}` : 'Dates to be confirmed'}
+              {range ? `${labelPrefix}: ${range}` : 'Dates to be confirmed'}
             </span>
             {scoutInfo && (
               <p className="text-xs text-white/50 mt-1">

@@ -1,7 +1,7 @@
-import { supabase } from "@/lib/supabase";
+import { notFound, redirect } from "next/navigation";
 import type { TrialProspect } from "@/lib/types";
 import { OnboardingForm } from "@/components/onboarding/OnboardingForm";
-import { notFound } from "next/navigation";
+import { resolvePlayer } from "@/lib/resolvePlayer";
 
 export const dynamic = "force-dynamic";
 
@@ -11,18 +11,16 @@ type Props = {
 
 export default async function OnboardingPage({ params }: Props) {
   const { playerId } = await params;
+  const resolved = await resolvePlayer(playerId);
 
-  const { data: prospect, error } = await supabase
-    .from("trial_prospects")
-    .select("*")
-    .eq("id", playerId)
-    .single();
+  if (!resolved) notFound();
 
-  if (error || !prospect) {
-    notFound();
+  // In-program players have already onboarded — send them to the main view.
+  if (resolved.source === "player") {
+    redirect(`/${playerId}`);
   }
 
-  const player = prospect as TrialProspect;
+  const player = resolved.raw as TrialProspect;
 
   // Allow onboarding for scheduled, accepted, and placed players
   if (!['scheduled', 'accepted', 'placed'].includes(player.status) && !player.onboarding_completed_at) {

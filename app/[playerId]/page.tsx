@@ -7,6 +7,9 @@ import { ContactsList } from "@/components/ContactsList";
 import { WeatherForecast } from "@/components/WeatherForecast";
 import { DocumentStatus } from "@/components/DocumentStatus";
 import { PaymentSection } from "@/components/PaymentSection";
+import { ProgramView } from "@/components/views/ProgramView";
+import { resolvePlayer } from "@/lib/resolvePlayer";
+import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -17,11 +20,16 @@ type Props = {
 export default async function PlayerPage({ params }: Props) {
   const { playerId } = await params;
 
-  const { data: prospect } = await supabase
-    .from("trial_prospects")
-    .select("*")
-    .eq("id", playerId)
-    .single();
+  // Route by source: in-program players get a dedicated view.
+  const resolved = await resolvePlayer(playerId);
+  if (!resolved) notFound();
+
+  if (resolved.source === "player") {
+    return <ProgramView player={resolved.data} />;
+  }
+
+  // Below: existing trial prospect flow, unchanged.
+  const prospect = resolved.raw;
 
   const player = prospect as TrialProspect;
   const startDate = player.trial_start_date;
