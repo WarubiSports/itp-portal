@@ -83,7 +83,7 @@ Each feature: port → deploy → announce → monitor 48h → move on.
 **Sunset prep (shipped 2026-04-14):**
 - [x] Staff App sidebar: "Player App" generic button removed
 - [x] Vite app: sunset banner on every page pointing users to Thomas on WhatsApp
-- [ ] Set the hard sunset date — suggested: **2026-06-30** (one week before preseason)
+- [x] Set the hard sunset date — **confirmed 2026-05-10**. 25/26 cohort finishes around May 1; 26/27 arrives July 6 directly on the unified portal. May 10 leaves no active players dependent on Vite.
 - [ ] Between now and sunset date, migrate the ~5 active Vite users off by hand
 - [ ] On sunset date: replace Vite app routes with a single redirect page ("Use your new portal — ask Thomas")
 - [ ] +30 days: take the Vite Vercel project offline
