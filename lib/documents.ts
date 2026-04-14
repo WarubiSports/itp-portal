@@ -1,6 +1,16 @@
-export const DOCUMENT_CONTENT: Record<string, { title: string; sections: { heading: string; body: string }[] }> = {
+export type DocumentPhase = "trial" | "program";
+
+export type DocumentDefinition = {
+  title: string;
+  /** Which player-journey phases require this document. */
+  phases: DocumentPhase[];
+  sections: { heading: string; body: string }[];
+};
+
+export const DOCUMENT_CONTENT: Record<string, DocumentDefinition> = {
   liability_waiver: {
     title: 'Liability Waiver',
+    phases: ['trial', 'program'],
     sections: [
       {
         heading: 'Assumption of Risk',
@@ -22,6 +32,7 @@ export const DOCUMENT_CONTENT: Record<string, { title: string; sections: { headi
   },
   code_of_conduct: {
     title: 'Code of Conduct',
+    phases: ['trial', 'program'],
     sections: [
       {
         heading: 'Expected Behavior',
@@ -47,6 +58,7 @@ export const DOCUMENT_CONTENT: Record<string, { title: string; sections: { headi
   },
   media_consent: {
     title: 'Media & Photo Consent',
+    phases: ['trial', 'program'],
     sections: [
       {
         heading: 'Consent',
@@ -62,4 +74,74 @@ export const DOCUMENT_CONTENT: Record<string, { title: string; sections: { headi
       },
     ],
   },
+  program_agreement: {
+    title: 'ITP Program Agreement',
+    phases: ['program'],
+    sections: [
+      {
+        heading: 'Program Commitment & Duration',
+        body: 'I commit to participate in the 1. FC Köln International Talent Pathway (ITP) program for the full duration specified in my placement agreement, typically from preseason in early July through the end of the competitive season the following May. I understand the program includes team training, competitive matches, physical testing, language classes, educational support, and team activities, and that my commitment extends across all of these elements. I agree to follow the program calendar — including travel dates, break periods, and return dates — as communicated by program staff.',
+      },
+      {
+        heading: 'Financial Terms',
+        body: 'I acknowledge the program fees as presented in my placement agreement, covering housing, meals where provided, training, and program logistics. I understand that items not explicitly included — travel outside the program, personal expenses, and discretionary purchases — are my responsibility. Payment is due in accordance with the schedule agreed upon with Warubi Sports. Non-payment or late payment may affect my participation status, and I will communicate proactively with program staff if any financial concerns arise.',
+      },
+      {
+        heading: 'Cancellation & Withdrawal',
+        body: 'I understand that cancellation of my participation after the program start date results in financial and operational consequences as outlined in my placement agreement. Deposits and fees paid are generally non-refundable once the program begins. If I withdraw voluntarily, I will follow the exit process: returning program-issued equipment, vacating housing, and completing a handover meeting with staff. If program management determines that my continued participation is not appropriate due to a violation of the Code of Conduct or other serious concerns, I accept that my participation may be terminated and that I will return home at my own expense.',
+      },
+      {
+        heading: 'Program Expectations',
+        body: 'I commit to giving my full effort to every training session, match, and testing day. I will follow instructions from coaching and program staff, train at the intensity and focus expected, and respect the group environment. I understand that performance, attitude, and off-pitch conduct are all evaluated throughout the program, and that future pathway opportunities — college placement, professional trial referrals, continued ITP enrollment — depend on all three. I will engage openly with the development process: accepting feedback, working on identified areas of growth, and communicating with staff about my progress.',
+      },
+      {
+        heading: 'Medical & Insurance',
+        body: 'I confirm that I either (a) hold valid health and accident insurance covering my stay in Germany for the full program duration, or (b) am enrolled in the insurance coverage provided through the program. I will promptly disclose any injury, illness, or medical condition affecting my participation, and I will follow return-to-play protocols set by the program\'s medical staff or physiotherapists. Any medical costs not covered by my insurance remain my responsibility.',
+      },
+      {
+        heading: 'Acknowledgement',
+        body: 'I have read and understood this Program Agreement in its entirety, along with the separate Liability Waiver, Code of Conduct, Media Consent, and Housing Living Agreement that I am also signing. I am committing voluntarily and with full understanding of the financial, physical, and time commitments involved. If I am under 18, my parent or legal guardian has reviewed and approved this agreement on my behalf.',
+      },
+    ],
+  },
+  housing_agreement: {
+    title: 'Housing Living Agreement',
+    phases: ['program'],
+    sections: [
+      {
+        heading: 'Use of Program Housing',
+        body: 'Program housing is provided as part of my ITP placement for the duration of my participation. I understand that housing assignments — which house and which room — are made by program management and may be adjusted based on operational needs. I will keep my assigned room clean and organized, respect the living space, and treat the furniture, appliances, and common areas as I would my own home.',
+      },
+      {
+        heading: 'Respect & Shared Living',
+        body: 'I will live respectfully with my housemates. Quiet hours are from 22:00 to 07:00 on training days and from 23:00 to 08:00 on non-training days. I will keep noise, music, and guests within reasonable limits so housemates can rest and recover. Shared spaces — kitchen, living room, bathrooms, laundry — will be kept clean, and I will complete my share of housekeeping chores as assigned through the program. Conflicts with housemates will be addressed directly and respectfully; if they cannot be resolved, I will involve program staff.',
+      },
+      {
+        heading: 'Damage & Liability',
+        body: 'I am responsible for any damage I cause to the housing, furniture, appliances, or common areas, whether through negligence or intentional action. Normal wear and tear is expected and not chargeable. Damage beyond normal wear — broken windows, damaged walls, burned surfaces, stained fabric, missing items — will be assessed and deducted from my deposit or billed to me directly. Damage caused during unauthorized guest presence is my sole responsibility.',
+      },
+      {
+        heading: 'Prohibited Activities',
+        body: 'The following are strictly prohibited in program housing: illegal drug use; smoking or vaping indoors; use of candles, incense, or any open flame; alcohol consumption for residents under 18 or in excess of program limits for older residents; firearms, weapons, or explosives; commercial activity operated from the housing; and subletting, sharing keys, or hosting anyone not approved by program staff. Violations result in immediate review of my housing privileges and may lead to removal from the program.',
+      },
+      {
+        heading: 'Visitors & Overnight Guests',
+        body: 'Visitors may be hosted in common areas during reasonable hours with prior notice to program staff. Overnight guests are not permitted except by specific written approval from program management for exceptional circumstances such as family visits. Family visits during designated visit periods are coordinated separately through the program\'s visitor travel process.',
+      },
+      {
+        heading: 'Move-Out & Inspection',
+        body: 'At the end of my program, or upon withdrawal for any reason, I will vacate the housing within the timeframe set by program staff. Before departure, I will remove all personal belongings, clean my room and assigned common-area responsibilities, return program-issued keys and equipment, and complete an exit inspection with a staff member. Any items left behind after my departure date may be disposed of at the program\'s discretion. My deposit, minus any damage or outstanding fees, will be returned to the account I provide.',
+      },
+    ],
+  },
+};
+
+/**
+ * Returns the required documents for a given player-journey phase,
+ * preserving definition order (which is also the display/signing order).
+ */
+export function getDocumentsForPhase(phase: DocumentPhase): { type: string; title: string }[] {
+  return Object.entries(DOCUMENT_CONTENT)
+    .filter(([, doc]) => doc.phases.includes(phase))
+    .map(([type, doc]) => ({ type, title: doc.title }));
 }

@@ -1,22 +1,21 @@
 import { CheckCircle2, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
-import { DOCUMENT_CONTENT } from '@/lib/documents'
-
-const REQUIRED_DOCS = Object.entries(DOCUMENT_CONTENT).map(([type, doc]) => ({
-  type,
-  title: doc.title,
-}))
+import { getDocumentsForPhase, type DocumentPhase } from '@/lib/documents'
 
 export const DocumentStatus = ({
   signedDocs,
   playerId,
+  phase = 'trial',
 }: {
   signedDocs: { document_type: string; signed_at: string }[]
   playerId: string
+  /** Which phase's document set to require. Defaults to 'trial'. */
+  phase?: DocumentPhase
 }) => {
+  const requiredDocs = getDocumentsForPhase(phase)
   const signedSet = new Set(signedDocs.map((d) => d.document_type))
-  const signedCount = REQUIRED_DOCS.filter((d) => signedSet.has(d.type)).length
-  const total = REQUIRED_DOCS.length
+  const signedCount = requiredDocs.filter((d) => signedSet.has(d.type)).length
+  const total = requiredDocs.length
   const allSigned = signedCount === total
 
   return (
@@ -32,7 +31,7 @@ export const DocumentStatus = ({
         </div>
 
         <div className="space-y-2">
-          {REQUIRED_DOCS.map((doc) => {
+          {requiredDocs.map((doc) => {
             const signed = signedSet.has(doc.type)
             return (
               <div key={doc.type} className="flex items-center gap-2">

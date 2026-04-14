@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import type { TrialProspect } from "@/lib/types";
 import { FileUpload } from "./FileUpload";
 import { DocumentsList } from "@/components/DocumentsList";
-import { DOCUMENT_CONTENT } from "@/lib/documents";
+import { getDocumentsForPhase } from "@/lib/documents";
 import {
   Plane,
   Shirt,
@@ -47,12 +47,11 @@ type FormState = {
 
 const STORAGE_KEY = (id: string) => `onboarding_${id}`;
 
-const REQUIRED_DOCS = Object.entries(DOCUMENT_CONTENT).map(([type, doc]) => ({
-  type,
-  title: doc.title,
-}));
-
 export const OnboardingForm = ({ prospect, isUnder18, phase }: Props) => {
+  // Documents shown in the signing step depend on the phase:
+  // trial players sign the 3 core docs; program (committed) players
+  // additionally sign the Program Agreement and Housing Living Agreement.
+  const REQUIRED_DOCS = getDocumentsForPhase(phase);
   // Trial: Sign + Travel + Equipment + Confirm (4 steps, U18 adds no extra step since no legal forms for trials)
   // Program: Sign + Travel + Equipment + Documents [+ U18 Forms if minor] + Confirm
   const totalSteps = phase === "trial" ? 4 : isUnder18 ? 6 : 5;
