@@ -8,7 +8,8 @@ import { WeatherForecast } from "@/components/WeatherForecast";
 import { DocumentStatus } from "@/components/DocumentStatus";
 import { PaymentSection } from "@/components/PaymentSection";
 import { ProgramView } from "@/components/views/ProgramView";
-import { resolvePlayer } from "@/lib/resolvePlayer";
+import { CommittedView } from "@/components/views/CommittedView";
+import { resolvePlayer, derivePhase } from "@/lib/resolvePlayer";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -20,15 +21,21 @@ type Props = {
 export default async function PlayerPage({ params }: Props) {
   const { playerId } = await params;
 
-  // Route by source: in-program players get a dedicated view.
+  // Route by phase: trial / committed / in-program each get a dedicated view.
   const resolved = await resolvePlayer(playerId);
   if (!resolved) notFound();
 
-  if (resolved.source === "player") {
+  const phase = derivePhase(resolved);
+
+  if (phase === "in-program") {
     return <ProgramView player={resolved.data} />;
   }
 
-  // Below: existing trial prospect flow, unchanged.
+  if (phase === "committed") {
+    return <CommittedView prospect={resolved.raw as TrialProspect} />;
+  }
+
+  // Below: trial phase — existing trial prospect flow, unchanged.
   const prospect = resolved.raw;
 
   const player = prospect as TrialProspect;
@@ -162,9 +169,44 @@ export default async function PlayerPage({ params }: Props) {
         } : {}}
         firstActivity={!player.travel_arrangements ? (() => {
           const training = locations.find(l => l.category === 'training')
+
+          // Find first training event AFTER arrival, with 3-hour buffer
+          // (travel + check-in + rest needed before they can train)
+          let dayLabel = 'your first day'
+          if (player.arrival_date) {
+            const arrivalTime = player.arrival_time || '00:00'
+            const arrivalMs = new Date(`${player.arrival_date}T${arrivalTime}:00`).getTime()
+            const bufferMs = 3 * 60 * 60 * 1000
+
+            const trainingEvent = events.find((e) => {
+              if (e.type !== 'team_training' && e.type !== 'training') return false
+              if (!e.start_time) return false
+              const eventStartMs = new Date(e.start_time).getTime()
+              return eventStartMs >= arrivalMs + bufferMs
+            })
+
+            if (trainingEvent) {
+              const evDate = new Date(trainingEvent.date + 'T00:00:00')
+              const arrivalDay = new Date(player.arrival_date + 'T00:00:00')
+              const dayDiff = Math.round(
+                (evDate.getTime() - arrivalDay.getTime()) / (1000 * 60 * 60 * 24)
+              )
+              if (dayDiff === 0) dayLabel = 'your first day'
+              else if (dayDiff === 1) dayLabel = 'your second day'
+              else dayLabel = `day ${dayDiff + 1}`
+
+              const time = new Date(trainingEvent.start_time!).toLocaleTimeString('en-GB', {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Europe/Berlin',
+              })
+              dayLabel = `${dayLabel} at ${time}`
+            }
+          }
+
           return {
             title: 'Team Training',
-            day: 'your first day',
+            day: dayLabel,
             location: training?.name || 'Sportpark Widdersdorf',
             address: training?.address,
             mapsUrl: training?.maps_url || undefined,
