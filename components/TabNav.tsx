@@ -2,32 +2,54 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { CalendarDays, ClipboardCheck } from "lucide-react";
+import { CalendarDays, ClipboardCheck, Activity } from "lucide-react";
 
-export const TabNav = ({
-  playerId,
-  completed,
-}: {
+type Variant = "prospect" | "program";
+
+type TabNavProps = {
   playerId: string;
-  completed: boolean;
-}) => {
-  const pathname = usePathname();
-  const isOnboarding = pathname.includes("/onboarding");
+  variant?: Variant;
+  /** Only used in `prospect` variant — shows a checkmark when onboarding is done. */
+  completed?: boolean;
+};
 
-  const tabs = [
-    {
-      label: "Info",
-      href: `/${playerId}`,
-      icon: CalendarDays,
-      active: !isOnboarding,
-    },
-    {
-      label: completed ? "Onboarding \u2713" : "Onboarding",
-      href: `/${playerId}/onboarding`,
-      icon: ClipboardCheck,
-      active: isOnboarding,
-    },
-  ];
+/**
+ * Bottom navigation. Prospect variant has Info / Onboarding tabs.
+ * Program variant has Info / Wellness for now — add Chores, Grocery, etc. as ported.
+ */
+export const TabNav = ({ playerId, variant = "prospect", completed = false }: TabNavProps) => {
+  const pathname = usePathname();
+
+  const tabs =
+    variant === "program"
+      ? [
+          {
+            label: "Info",
+            href: `/${playerId}`,
+            icon: CalendarDays,
+            active: !pathname.includes("/wellness"),
+          },
+          {
+            label: "Wellness",
+            href: `/${playerId}/wellness`,
+            icon: Activity,
+            active: pathname.includes("/wellness"),
+          },
+        ]
+      : [
+          {
+            label: "Info",
+            href: `/${playerId}`,
+            icon: CalendarDays,
+            active: !pathname.includes("/onboarding"),
+          },
+          {
+            label: completed ? "Onboarding \u2713" : "Onboarding",
+            href: `/${playerId}/onboarding`,
+            icon: ClipboardCheck,
+            active: pathname.includes("/onboarding"),
+          },
+        ];
 
   return (
     <nav className="mx-4 mb-6 flex gap-1 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]/80 backdrop-blur-lg p-1">

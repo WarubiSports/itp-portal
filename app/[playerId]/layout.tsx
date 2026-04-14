@@ -46,8 +46,10 @@ export default async function PlayerLayout({ params, children }: Props) {
     <div className="min-h-screen flex flex-col items-center">
       <main className="w-full max-w-[540px] min-h-screen lg:min-h-0 lg:my-8 lg:rounded-2xl lg:border lg:border-[var(--color-border)] lg:shadow-2xl lg:shadow-black/40 lg:overflow-hidden">
         <WelcomeHeader player={player} scoutInfo={scoutInfo} labelPrefix={labelPrefix} />
-        {showOnboarding && source === "prospect" ? (
-          <TabNav playerId={playerId} completed={!!player.onboarding_completed_at} />
+        {source === "player" ? (
+          <TabNav playerId={playerId} variant="program" />
+        ) : showOnboarding ? (
+          <TabNav playerId={playerId} variant="prospect" completed={!!player.onboarding_completed_at} />
         ) : null}
         {children}
       </main>
