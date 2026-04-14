@@ -6,6 +6,7 @@ import { LocationsList } from "@/components/LocationsList";
 import { ContactsList } from "@/components/ContactsList";
 import { WeatherForecast } from "@/components/WeatherForecast";
 import { PaymentSection } from "@/components/PaymentSection";
+import { sortContacts, STAFF_LOCATION_NAMES } from "@/lib/sortContacts";
 
 type Props = {
   player: PlayerRecord;
@@ -36,12 +37,12 @@ export const ProgramView = async ({ player }: Props) => {
     events = (data || []) as CalendarEvent[];
   }
 
-  // Locations (Köln site)
+  // Locations (Köln site) — exclude staff-only working locations
   const { data: locationsData } = await supabase
     .from("itp_locations")
     .select("*")
     .eq("itp_site", "Köln")
-    .neq("name", "Warubi Office");
+    .not("name", "in", `(${STAFF_LOCATION_NAMES.map((n) => `"${n}"`).join(",")})`);
 
   let locations = (locationsData || []) as ITPLocation[];
 
@@ -93,7 +94,7 @@ export const ProgramView = async ({ player }: Props) => {
     ])
     .order("name");
 
-  const contacts = (staffContacts || []).map(
+  const contacts = sortContacts(staffContacts || []).map(
     (c: {
       name: string;
       role?: string;

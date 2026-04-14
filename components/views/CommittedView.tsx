@@ -6,6 +6,7 @@ import { PaymentSection } from "@/components/PaymentSection";
 import { ContactsList } from "@/components/ContactsList";
 import { LocationsList } from "@/components/LocationsList";
 import { FileText, CheckCircle2, AlertCircle } from "lucide-react";
+import { sortContacts, STAFF_LOCATION_NAMES } from "@/lib/sortContacts";
 
 type Props = {
   prospect: TrialProspect;
@@ -39,11 +40,12 @@ export const CommittedView = async ({ prospect }: Props) => {
     signer_name: string;
   }[];
 
-  // Locations for Köln
+  // Locations for Köln — exclude staff-only working locations
   const { data: locationsData } = await supabase
     .from("itp_locations")
     .select("*")
-    .eq("itp_site", "Köln");
+    .eq("itp_site", "Köln")
+    .not("name", "in", `(${STAFF_LOCATION_NAMES.map((n) => `"${n}"`).join(",")})`);
 
   let locations = (locationsData || []) as ITPLocation[];
 
@@ -97,7 +99,7 @@ export const CommittedView = async ({ prospect }: Props) => {
     ])
     .order("name");
 
-  const contacts = (staffContacts || []).map(
+  const contacts = sortContacts(staffContacts || []).map(
     (c: {
       name: string;
       role?: string;

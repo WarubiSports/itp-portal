@@ -10,6 +10,7 @@ import { PaymentSection } from "@/components/PaymentSection";
 import { ProgramView } from "@/components/views/ProgramView";
 import { CommittedView } from "@/components/views/CommittedView";
 import { resolvePlayer, derivePhase } from "@/lib/resolvePlayer";
+import { sortContacts, STAFF_LOCATION_NAMES } from "@/lib/sortContacts";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -58,7 +59,8 @@ export default async function PlayerPage({ params }: Props) {
   const { data: locationsData } = await supabase
     .from("itp_locations")
     .select("*")
-    .eq("itp_site", "Köln");
+    .eq("itp_site", "Köln")
+    .not("name", "in", `(${STAFF_LOCATION_NAMES.map((n) => `"${n}"`).join(",")})`);
 
   let locations = (locationsData || []) as ITPLocation[];
 
@@ -107,7 +109,7 @@ export default async function PlayerPage({ params }: Props) {
     .in("role", ["Project Manager", "Project Manager / Coach", "Head of Player Development"])
     .order("name");
 
-  const contacts = (staffContacts || []).map((c: { name: string; role?: string; organization?: string; photo_url?: string; nationality?: string }) => ({
+  const contacts = sortContacts(staffContacts || []).map((c: { name: string; role?: string; organization?: string; photo_url?: string; nationality?: string }) => ({
     name: c.name,
     role: c.role || "",
     organization: c.organization,
