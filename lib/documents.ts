@@ -82,14 +82,18 @@ export const DOCUMENT_CONTENT: Record<string, DocumentDefinition> = {
         heading: 'Program Commitment & Duration',
         body: 'I commit to participate in the 1. FC Köln International Talent Pathway (ITP) program for the full duration specified in my placement agreement, typically from preseason in early July through the end of the competitive season the following May. I understand the program includes team training, competitive matches, physical testing, language classes, educational support, and team activities, and that my commitment extends across all of these elements. I agree to follow the program calendar — including travel dates, break periods, and return dates — as communicated by program staff.',
       },
-      {
-        heading: 'Financial Terms',
-        body: 'I acknowledge the program fees as presented in my placement agreement, covering housing, meals where provided, training, and program logistics. I understand that items not explicitly included — travel outside the program, personal expenses, and discretionary purchases — are my responsibility. Payment is due in accordance with the schedule agreed upon with Warubi Sports. Non-payment or late payment may affect my participation status, and I will communicate proactively with program staff if any financial concerns arise.',
-      },
-      {
-        heading: 'Cancellation & Withdrawal',
-        body: 'I understand that cancellation of my participation after the program start date results in financial and operational consequences as outlined in my placement agreement. Deposits and fees paid are generally non-refundable once the program begins. If I withdraw voluntarily, I will follow the exit process: returning program-issued equipment, vacating housing, and completing a handover meeting with staff. If program management determines that my continued participation is not appropriate due to a violation of the Code of Conduct or other serious concerns, I accept that my participation may be terminated and that I will return home at my own expense.',
-      },
+      // HIDDEN FOR REVIEW — Max wants to discuss the legal language
+      // before these sections go live. Drafts preserved here; splice
+      // back into the sections array once approved:
+      //
+      // {
+      //   heading: 'Financial Terms',
+      //   body: 'I acknowledge the program fees as presented in my placement agreement, covering housing, meals where provided, training, and program logistics. I understand that items not explicitly included — travel outside the program, personal expenses, and discretionary purchases — are my responsibility. Payment is due in accordance with the schedule agreed upon with Warubi Sports. Non-payment or late payment may affect my participation status, and I will communicate proactively with program staff if any financial concerns arise.',
+      // },
+      // {
+      //   heading: 'Cancellation & Withdrawal',
+      //   body: 'I understand that cancellation of my participation after the program start date results in financial and operational consequences as outlined in my placement agreement. Deposits and fees paid are generally non-refundable once the program begins. If I withdraw voluntarily, I will follow the exit process: returning program-issued equipment, vacating housing, and completing a handover meeting with staff. If program management determines that my continued participation is not appropriate due to a violation of the Code of Conduct or other serious concerns, I accept that my participation may be terminated and that I will return home at my own expense.',
+      // },
       {
         heading: 'Program Expectations',
         body: 'I commit to giving my full effort to every training session, match, and testing day. I will follow instructions from coaching and program staff, train at the intensity and focus expected, and respect the group environment. I understand that performance, attitude, and off-pitch conduct are all evaluated throughout the program, and that future pathway opportunities — college placement, professional trial referrals, continued ITP enrollment — depend on all three. I will engage openly with the development process: accepting feedback, working on identified areas of growth, and communicating with staff about my progress.',
