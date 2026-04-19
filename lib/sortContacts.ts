@@ -1,13 +1,14 @@
 /**
  * Preferred staff contact order for the player-facing views.
  * Karoline (FC Köln PM / Coach) first — she's the day-to-day point of contact.
- * Then Thomas (Warubi PM), then Iker (Head of Player Development).
- * Anyone else falls through to the end.
+ * Then Jorge (Head of Methodology), Thomas (Warubi PM), Iker (Head of
+ * Player Development). Anyone else falls through to the end.
  */
 const ORDER: Record<string, number> = {
   "Karoline Heinze": 0,
-  "Thomas Ellinger": 1,
-  "Iker Casanova": 2,
+  "Jorge Arcila Cáceres": 1,
+  "Thomas Ellinger": 2,
+  "Iker Casanova": 3,
 };
 
 type Contactish = { name: string };

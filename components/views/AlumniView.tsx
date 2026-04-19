@@ -22,6 +22,7 @@ export const AlumniView = async ({ player, alumniDestination }: Props) => {
       "Project Manager",
       "Project Manager / Coach",
       "Head of Player Development",
+      "Head of Methodology",
     ])
     .order("name");
 

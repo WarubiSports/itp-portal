@@ -24,6 +24,7 @@ export const ClosedView = async ({ player, reason }: Props) => {
       "Project Manager",
       "Project Manager / Coach",
       "Head of Player Development",
+      "Head of Methodology",
     ])
     .order("name");
 

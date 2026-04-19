@@ -82,6 +82,7 @@ export const ProgramView = async ({ player }: Props) => {
       "Project Manager",
       "Project Manager / Coach",
       "Head of Player Development",
+      "Head of Methodology",
       "Coach",
     ])
     .order("name");

@@ -117,7 +117,7 @@ export default async function PlayerPage({ params }: Props) {
   const { data: staffContacts } = await supabase
     .from("itp_contacts")
     .select("name, role, organization, photo_url, nationality")
-    .in("role", ["Project Manager", "Project Manager / Coach", "Head of Player Development"])
+    .in("role", ["Project Manager", "Project Manager / Coach", "Head of Player Development", "Head of Methodology"])
     .order("name");
 
   const contacts = sortContacts(staffContacts || []).map((c: { name: string; role?: string; organization?: string; photo_url?: string; nationality?: string }) => ({

@@ -97,6 +97,7 @@ export const CommittedView = async ({ prospect }: Props) => {
       "Project Manager",
       "Project Manager / Coach",
       "Head of Player Development",
+      "Head of Methodology",
     ])
     .order("name");
 
