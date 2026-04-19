@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { getPlayerEvents } from "@/lib/getPlayerEvents";
 import type { CalendarEvent, ITPLocation } from "@/lib/types";
 import type { PlayerRecord } from "@/lib/resolvePlayer";
 import { WeeklyCalendar } from "@/components/WeeklyCalendar";
@@ -25,17 +26,7 @@ export const ProgramView = async ({ player }: Props) => {
   // Schedule — only if program dates set
   let events: CalendarEvent[] = [];
   if (startDate && endDate) {
-    const { data } = await supabase
-      .from("events")
-      .select("*")
-      .gte("date", startDate)
-      .lte("date", endDate)
-      .or("program.is.null,program.eq.itp_men")
-      .is("visitor_id", null)
-      .not("type", "in", "(trial,prospect_trial,language_class,recovery,airport_pickup)")
-      .order("date")
-      .order("start_time");
-    events = (data || []) as CalendarEvent[];
+    events = await getPlayerEvents({ startDate, endDate, phase: "program" });
   }
 
   // Locations (Köln site) — exclude staff-only working locations

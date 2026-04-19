@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { getPlayerEvents } from "@/lib/getPlayerEvents";
 import type { TrialProspect, CalendarEvent, ITPLocation } from "@/lib/types";
 import { WeeklyCalendar } from "@/components/WeeklyCalendar";
 import { LocationsList } from "@/components/LocationsList";
@@ -63,17 +64,7 @@ export default async function PlayerPage({ params }: Props) {
 
   let events: CalendarEvent[] = [];
   if (startDate && endDate) {
-    const { data } = await supabase
-      .from("events")
-      .select("*")
-      .gte("date", startDate)
-      .lte("date", endDate)
-      .not("type", "in", "(language_class,recovery,airport_pickup)")
-      .is("visitor_id", null)
-      .or("program.is.null,program.eq.itp_men")
-      .order("date")
-      .order("start_time");
-    events = (data || []) as CalendarEvent[];
+    events = await getPlayerEvents({ startDate, endDate, phase: "trial" });
   }
 
   const { data: locationsData } = await supabase
