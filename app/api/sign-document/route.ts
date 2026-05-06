@@ -53,8 +53,16 @@ export async function POST(request: Request) {
       }
     }
 
+    // The URL ID can be either a player.id or a trial_prospects.id. The
+    // player_documents table has a XOR check between player_id and
+    // prospect_id — we must write to the correct column or the row will
+    // be invisible to per-prospect / per-player queries downstream.
+    const { data: playerRow } = await supabase
+      .from('players').select('id').eq('id', playerId).maybeSingle()
+    const isPlayer = !!playerRow
+
     const record: Record<string, unknown> = {
-      player_id: playerId,
+      ...(isPlayer ? { player_id: playerId } : { prospect_id: playerId }),
       document_type: documentType,
       document_title: documentTitle,
       signature_image_path: path,
@@ -72,7 +80,9 @@ export async function POST(request: Request) {
 
     const { error } = await supabase
       .from('player_documents')
-      .upsert(record, { onConflict: 'player_id,document_type' })
+      .upsert(record, {
+        onConflict: isPlayer ? 'player_id,document_type' : 'prospect_id,document_type',
+      })
 
     if (error) {
       await logError({
