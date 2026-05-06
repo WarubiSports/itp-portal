@@ -84,7 +84,7 @@ export default async function PlayerPage({ params }: Props) {
       category: 'training',
       itp_site: 'Köln',
     } as ITPLocation;
-    const housingArranged = player.accommodation_type === 'housing_provided';
+    const housingArranged = player.accommodation_type === 'house';
     locations = housingArranged
       ? [
           futTraining,
@@ -188,7 +188,10 @@ export default async function PlayerPage({ params }: Props) {
     );
   }
 
-  const academyHosted = !isFutures && (!!player.room_id || player.accommodation_type === "house");
+  // accommodation_type='house' means staff flagged this player as staying
+  // with us. Hide hotel recs in that case, regardless of program. ITP players
+  // also auto-hide once a room is assigned.
+  const academyHosted = player.accommodation_type === "house" || (!isFutures && !!player.room_id);
 
   return (
     <>
