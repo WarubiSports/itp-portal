@@ -30,10 +30,13 @@ export const CommittedView = async ({ prospect }: Props) => {
   const isFutures = (prospect as { program?: string }).program === "warubi_futures";
 
   // Signed documents — should be complete from trial, but verify.
+  // Prospect signatures live under prospect_id (player_id is set only after
+  // promotion); querying player_id alone leaves the view rendering as
+  // "unsigned" even when the trial waivers are in fact complete.
   const { data: signedDocsData } = await supabase
     .from("player_documents")
     .select("document_type, document_title, signed_at, signer_name")
-    .eq("player_id", playerId);
+    .or(`prospect_id.eq.${playerId},player_id.eq.${playerId}`);
 
   const signedDocs = (signedDocsData || []) as {
     document_type: string;
