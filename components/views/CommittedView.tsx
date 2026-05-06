@@ -57,7 +57,7 @@ export const CommittedView = async ({ prospect }: Props) => {
       category: 'training',
       itp_site: 'Köln',
     } as ITPLocation;
-    const housingArranged = prospect.accommodation_type === 'housing_provided';
+    const housingArranged = prospect.accommodation_type === 'house';
     locations = housingArranged
       ? [
           futTraining,
