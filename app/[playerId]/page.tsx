@@ -178,7 +178,7 @@ export default async function PlayerPage({ params }: Props) {
                 ? "Nearby Hotel"
                 : "Self-Organized",
             address: isAcademyHosted
-              ? (player.accommodation_notes || "You'll be staying in our player housing in Widdersdorf. Your specific house and room will be confirmed before arrival.")
+              ? (player.accommodation_notes || "You'll be staying in our player housing in Widdersdorf.")
               : isHotelSuggested
                 ? (player.accommodation_notes || "We recommend one of the hotels below — all within minutes of the training facility.")
                 : "No housing assigned yet — please organize your own accommodation.",
