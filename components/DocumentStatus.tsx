@@ -1,12 +1,13 @@
 import { CheckCircle2, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
-import { getDocumentsForPhase, type DocumentPhase } from '@/lib/documents'
+import { getDocumentsForPhase, type DocumentPhase, type DocumentProgram } from '@/lib/documents'
 
 export const DocumentStatus = ({
   signedDocs,
   playerId,
   phase = 'trial',
   prospectCreatedAt,
+  program,
 }: {
   signedDocs: { document_type: string; signed_at: string }[]
   playerId: string
@@ -14,8 +15,10 @@ export const DocumentStatus = ({
   phase?: DocumentPhase
   /** Prospect's created_at — used to respect any doc's effectiveFrom cutoff. */
   prospectCreatedAt?: string | null
+  /** Prospect's program — filters out program-restricted docs (e.g. ITP-only medical consent). */
+  program?: DocumentProgram | null
 }) => {
-  const requiredDocs = getDocumentsForPhase(phase, prospectCreatedAt)
+  const requiredDocs = getDocumentsForPhase(phase, prospectCreatedAt, program)
   const signedSet = new Set(signedDocs.map((d) => d.document_type))
   const signedCount = requiredDocs.filter((d) => signedSet.has(d.type)).length
   const total = requiredDocs.length

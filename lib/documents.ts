@@ -1,9 +1,18 @@
 export type DocumentPhase = "trial" | "program";
 
+export type DocumentProgram = "itp_men" | "itp_women" | "warubi_futures";
+
 export type DocumentDefinition = {
   title: string;
   /** Which player-journey phases require this document. */
   phases: DocumentPhase[];
+  /**
+   * Optional program scope: when set, only prospects in one of these programs
+   * are required to sign. Omit to require across all programs. Lets us keep
+   * ITP-specific docs (e.g. medical consent for academy stays) out of the
+   * shorter Warubi Futures camp flow.
+   */
+  programs?: DocumentProgram[];
   /**
    * Optional cutoff: only required for players whose trial starts on or
    * after this date (YYYY-MM-DD). Lets us add new required docs without
@@ -95,6 +104,10 @@ export const DOCUMENT_CONTENT: Record<string, DocumentDefinition> = {
   medical_consent: {
     title: 'Medical Treatment Consent',
     phases: ['trial', 'program'],
+    // ITP-only: long-stay academy residents (men + women) carry the
+    // medical/emergency risk profile this consent covers. Warubi Futures
+    // camp participants run a short paid camp and are out of scope.
+    programs: ['itp_men', 'itp_women'],
     // Added 2026-04-14 after porting from the women's app. Only required
     // for prospects created on or after this date — anyone already in
     // the pipeline (Jadon: trial Apr 16, etc.) is grandfathered with
@@ -217,7 +230,8 @@ export const DOCUMENT_CONTENT: Record<string, DocumentDefinition> = {
  */
 export function getDocumentsForPhase(
   phase: DocumentPhase,
-  prospectCreatedAt?: string | null
+  prospectCreatedAt?: string | null,
+  program?: DocumentProgram | null
 ): { type: string; title: string }[] {
   // Normalize timestamp → YYYY-MM-DD for string comparison
   const createdDate = prospectCreatedAt
@@ -227,6 +241,9 @@ export function getDocumentsForPhase(
   return Object.entries(DOCUMENT_CONTENT)
     .filter(([, doc]) => {
       if (!doc.phases.includes(phase)) return false;
+      if (doc.programs && program && !doc.programs.includes(program)) {
+        return false;
+      }
       if (doc.effectiveFrom && prospectCreatedAt !== undefined) {
         // Null created_at is impossible in practice (DB default), but
         // defensively grandfather it as pre-cutoff.

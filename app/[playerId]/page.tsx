@@ -214,6 +214,7 @@ export default async function PlayerPage({ params }: Props) {
         signedDocs={signedDocs}
         playerId={playerId}
         prospectCreatedAt={player.created_at}
+        program={player.program ?? null}
       />
       <PaymentSection
         paymentLink={player.payment_link}
