@@ -84,15 +84,20 @@ export default async function PlayerPage({ params }: Props) {
       category: 'training',
       itp_site: 'Köln',
     } as ITPLocation;
-    const residence: ITPLocation = {
-      id: 'fut-residence',
-      name: 'Player Residence',
-      address: 'Neue Sandkaul 84, 50859 Köln-Widdersdorf',
-      maps_url: 'https://www.google.com/maps/search/?api=1&query=Neue+Sandkaul+84+50859+K%C3%B6ln',
-      category: 'housing',
-      itp_site: 'Köln',
-    } as ITPLocation;
-    locations = [futTraining, residence];
+    const housingArranged = player.accommodation_type === 'house';
+    locations = housingArranged
+      ? [
+          futTraining,
+          {
+            id: 'fut-housing',
+            name: 'Player House',
+            address: 'Neue Sandkaul 84, 50859 Köln-Widdersdorf',
+            maps_url: 'https://www.google.com/maps/search/?api=1&query=Neue+Sandkaul+84+50859+K%C3%B6ln',
+            category: 'housing',
+            itp_site: 'Köln',
+          } as ITPLocation,
+        ]
+      : [futTraining];
   } else {
     const { data: locationsData } = await supabase
       .from("itp_locations")
