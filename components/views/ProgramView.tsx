@@ -31,6 +31,7 @@ export const ProgramView = async ({ player }: Props) => {
       endDate,
       phase: "program",
       program: player.program ?? null,
+      viewerId: player.id,
     });
   }
 

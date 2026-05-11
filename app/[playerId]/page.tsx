@@ -68,7 +68,7 @@ export default async function PlayerPage({ params }: Props) {
 
   let events: CalendarEvent[] = [];
   if (startDate && endDate) {
-    events = await getPlayerEvents({ startDate, endDate, phase: "trial", program: playerProgram });
+    events = await getPlayerEvents({ startDate, endDate, phase: "trial", program: playerProgram, viewerId: player.id });
   }
 
   // Futures players see only their training venue (and housing if arranged

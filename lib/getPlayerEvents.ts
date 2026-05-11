@@ -9,6 +9,13 @@ type Args = {
   endDate: string;
   phase: Phase;
   program?: Program | null;
+  /**
+   * The viewer's prospect or player ID — same UUID, matched against either
+   * event_attendees.prospect_id (unpromoted) or event_attendees.player_id
+   * (promoted). Required to suppress individual events scoped to other
+   * people in the same program.
+   */
+  viewerId: string;
 };
 
 /**
@@ -28,6 +35,14 @@ type Args = {
  *   - type exclusions       — language class, recovery, airport pickup
  *                              are never shown; program phase also
  *                              excludes trial-only event types
+ *   - attendee scope        — events with no attendees are program-wide
+ *                              (team training, group activities). Events
+ *                              with attendees only show to listed
+ *                              attendees. Without this, individual events
+ *                              (e.g. "Trial Frechen (David)") leak to
+ *                              every prospect in the same program — David
+ *                              Climan saw David Okorie's trial schedule
+ *                              May 11 2026 before this fix.
  *
  * Visitor pages have their own query in app/visitor/[visitorId]/page.tsx
  * that filters BY visitor_id — keep that one separate by design.
@@ -37,6 +52,7 @@ export async function getPlayerEvents({
   endDate,
   phase,
   program,
+  viewerId,
 }: Args): Promise<CalendarEvent[]> {
   const excludes = [
     "language_class",
@@ -51,7 +67,7 @@ export async function getPlayerEvents({
 
   const { data } = await supabase
     .from("events")
-    .select("*")
+    .select("*, attendees:event_attendees(player_id, prospect_id)")
     .gte("date", startDate)
     .lte("date", endDate)
     .not("type", "in", `(${excludes.join(",")})`)
@@ -60,5 +76,15 @@ export async function getPlayerEvents({
     .order("date")
     .order("start_time");
 
-  return (data || []) as CalendarEvent[];
+  const rows = (data || []) as (CalendarEvent & {
+    attendees?: { player_id: string | null; prospect_id: string | null }[];
+  })[];
+
+  return rows.filter((e) => {
+    const attendees = e.attendees;
+    if (!attendees || attendees.length === 0) return true; // program-wide
+    return attendees.some(
+      (a) => a.player_id === viewerId || a.prospect_id === viewerId,
+    );
+  });
 }
