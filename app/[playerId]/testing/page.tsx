@@ -146,26 +146,16 @@ export default async function TestingPage({ params }: Props) {
     redirect(`/${urlId}`);
   }
 
-  // Testing is only a real tab for in-program players. Prospects/committed players go back.
-  if (resolved.source !== "player") {
-    return (
-      <div className="py-12 px-4 text-center">
-        <Activity size={40} className="mx-auto mb-3 text-[var(--color-text-muted)]" />
-        <p className="text-[var(--color-text-secondary)] text-sm mb-4">
-          Physical testing results appear once you&apos;re in the program.
-        </p>
-        <Link href={`/${urlId}`} className="text-sm font-semibold text-[var(--color-brand)] hover:underline">
-          Back to your info →
-        </Link>
-      </div>
-    );
-  }
-
-  const playerId = resolved.data.id;
+  const subjectId = resolved.data.id;
   const ageGroup = getAgeGroup(resolved.data.date_of_birth);
 
+  // Test rows live keyed to either player_id (ITP players) or prospect_id
+  // (Futures camp participants — schema gained prospect_id 2026-05-12).
+  // Pick the right column for the resolved subject's kind.
+  const subjectColumn = resolved.source === "player" ? "player_id" : "prospect_id";
+
   const [testsRes, benchmarksRes] = await Promise.all([
-    supabase.from("physical_tests").select("*").eq("player_id", playerId).order("test_date", { ascending: false }),
+    supabase.from("physical_tests").select("*").eq(subjectColumn, subjectId).order("test_date", { ascending: false }),
     supabase.from("test_benchmarks").select("*").eq("age_group", ageGroup).order("display_order", { ascending: true }),
   ]);
 

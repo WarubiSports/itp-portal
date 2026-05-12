@@ -72,7 +72,9 @@ export const TabNav = ({ playerId, variant = "prospect", program, completed = fa
             label: "Info",
             href: `/${playerId}`,
             icon: CalendarDays,
-            active: !pathname.includes("/onboarding"),
+            active:
+              !pathname.includes("/onboarding") &&
+              !pathname.includes("/testing"),
           },
           {
             label: completed ? "Onboarding \u2713" : "Onboarding",
@@ -80,6 +82,21 @@ export const TabNav = ({ playerId, variant = "prospect", program, completed = fa
             icon: ClipboardCheck,
             active: pathname.includes("/onboarding"),
           },
+          // Futures camp participants run Iker's physical testing protocol
+          // even as prospects (camp is too short for the trial \u2192 committed
+          // promotion path). Surface the Testing tab so they can see their
+          // results + benchmarks live. ITP trial prospects don't see this
+          // tab; testing for them kicks in after promotion to in-program.
+          ...(isFutures
+            ? [
+                {
+                  label: "Testing",
+                  href: `/${playerId}/testing`,
+                  icon: Dumbbell,
+                  active: pathname.includes("/testing"),
+                },
+              ]
+            : []),
         ];
 
   return (
