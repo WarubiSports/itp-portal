@@ -78,11 +78,18 @@ export async function POST(request: Request) {
       record.parent_signed_at = new Date().toISOString()
     }
 
-    const { error } = await supabase
+    // The player_documents unique indexes are PARTIAL (player_id and
+    // prospect_id are mutually exclusive via a XOR check), and Postgres
+    // can't match ON CONFLICT to a partial index. Delete any existing row
+    // for this subject + document_type, then insert fresh.
+    const subjectColumn = isPlayer ? 'player_id' : 'prospect_id'
+    await supabase
       .from('player_documents')
-      .upsert(record, {
-        onConflict: isPlayer ? 'player_id,document_type' : 'prospect_id,document_type',
-      })
+      .delete()
+      .eq(subjectColumn, playerId)
+      .eq('document_type', documentType)
+
+    const { error } = await supabase.from('player_documents').insert(record)
 
     if (error) {
       await logError({
