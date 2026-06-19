@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { resolvePlayer } from "@/lib/resolvePlayer";
 import { WelcomeHeader } from "@/components/WelcomeHeader";
 import { TabNav } from "@/components/TabNav";
+import { FeedbackButton } from "@/components/FeedbackButton";
 
 export const dynamic = "force-dynamic";
 
@@ -75,6 +76,7 @@ export default async function PlayerLayout({ params, children }: Props) {
         ) : null}
         {children}
       </main>
+      <FeedbackButton reporterName={`${player.first_name ?? ""} ${player.last_name ?? ""}`.trim() || undefined} />
     </div>
   );
 }
