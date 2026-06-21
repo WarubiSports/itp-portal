@@ -60,6 +60,7 @@ export interface FuturesEvaluationData {
   ageLabel: string;
   nationality: string;
   currentLevel: string;
+  ageGroup?: string;
   campDates: string;
   ratings: {
     technical?: number | null;
@@ -248,6 +249,7 @@ export function buildFuturesEvaluation(
     ageLabel: ageFromDob(prospect.date_of_birth, now),
     nationality: normalizeNationality(prospect.nationality),
     currentLevel: prospect.current_club ?? "",
+    ageGroup,
     campDates: formatCampDates(prospect.trial_start_date, prospect.trial_end_date),
     ratings: {
       technical: prospect.technical_rating,

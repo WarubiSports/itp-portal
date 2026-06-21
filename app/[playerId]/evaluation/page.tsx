@@ -106,7 +106,7 @@ export default async function EvaluationPage({ params }: Props) {
             { k: "Position", v: data.position },
             { k: "Age", v: data.ageLabel },
             { k: "Nationality", v: data.nationality },
-            { k: "Current Level", v: data.currentLevel },
+            { k: "Age Group", v: data.ageGroup },
           ].map(({ k, v }) => (
             <div key={k} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2">
               <div className="text-[10px] tracking-wider text-[var(--color-text-muted)] uppercase">{k}</div>
