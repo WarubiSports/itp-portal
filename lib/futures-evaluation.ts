@@ -128,12 +128,14 @@ export function ageFromDob(dob: string | undefined | null, now: Date): string {
   return String(age);
 }
 
-/** Benchmark age group by birth year — matches the staff PDF + test_benchmarks rows. */
+/** Benchmark age group by birth year — matches the staff PDF + test_benchmarks rows.
+ *  2026/27 season: U-17 = 2010/2011, U-19 = 2008/2009, U-21 = 2007 and older.
+ *  Roll forward by one birth year each new season. */
 export function benchmarkAgeGroup(dob: string | undefined | null): "U-17" | "U-19" | "U-21" {
   if (!dob) return "U-21";
   const by = parseInt(String(dob).substring(0, 4));
-  if (by >= 2009) return "U-17";
-  if (by >= 2007) return "U-19";
+  if (by >= 2010) return "U-17";
+  if (by >= 2008) return "U-19";
   return "U-21";
 }
 
