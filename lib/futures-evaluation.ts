@@ -136,6 +136,40 @@ export function benchmarkAgeGroup(dob: string | undefined | null): "U-17" | "U-1
   return "U-21";
 }
 
+// Nationalities are entered in mixed languages (German camp staff, intake forms).
+// The evaluation is English, so map known non-English country/nationality names to
+// English. Handles multi-value strings and leaves English/unknown values untouched.
+const NATIONALITY_EN: Record<string, string> = {
+  deutschland: "Germany", deutsch: "German", deutsche: "German",
+  ungarn: "Hungary", ungarisch: "Hungarian",
+  frankreich: "France", französisch: "French", franzoesisch: "French",
+  spanien: "Spain", spanisch: "Spanish", españa: "Spain",
+  italien: "Italy", italienisch: "Italian", italia: "Italy",
+  niederlande: "Netherlands", niederländisch: "Dutch",
+  österreich: "Austria", oesterreich: "Austria",
+  schweiz: "Switzerland", belgien: "Belgium", polen: "Poland", polnisch: "Polish",
+  griechenland: "Greece", türkei: "Turkey", tuerkei: "Turkey", türkisch: "Turkish",
+  brasilien: "Brazil", kroatien: "Croatia", serbien: "Serbia",
+  rumänien: "Romania", rumaenien: "Romania", tschechien: "Czechia",
+  russland: "Russia", russisch: "Russian",
+  "vereinigte staaten": "United States", "vereinigtes königreich": "United Kingdom",
+  marokko: "Morocco", ägypten: "Egypt", aegypten: "Egypt",
+};
+
+/** Render a nationality field in English, value-by-value; unknown/English values pass through. */
+export function normalizeNationality(raw?: string | null): string {
+  if (!raw) return "";
+  return raw
+    .split(/\s*[,/&]\s*/)
+    .map((part) => {
+      const t = part.trim();
+      if (!t) return "";
+      return NATIONALITY_EN[t.toLowerCase()] ?? t;
+    })
+    .filter(Boolean)
+    .join(", ");
+}
+
 /** "12 to 22 May 2026" style range; falls back gracefully when dates are missing. */
 export function formatCampDates(start?: string | null, end?: string | null): string {
   const fmt = (d: string) =>
@@ -212,7 +246,7 @@ export function buildFuturesEvaluation(
     lastName: prospect.last_name ?? "",
     position: prospect.position ?? "",
     ageLabel: ageFromDob(prospect.date_of_birth, now),
-    nationality: prospect.nationality ?? "",
+    nationality: normalizeNationality(prospect.nationality),
     currentLevel: prospect.current_club ?? "",
     campDates: formatCampDates(prospect.trial_start_date, prospect.trial_end_date),
     ratings: {
