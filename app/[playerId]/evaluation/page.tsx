@@ -277,7 +277,7 @@ export default async function EvaluationPage({ params }: Props) {
         >
           <div className="min-w-0">
             <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/80">Next Step</div>
-            <div className="mt-1 text-base font-bold text-white">Let&apos;s map {data.firstName}&apos;s route.</div>
+            <div className="mt-1 text-base font-bold text-white">Let&apos;s map your route.</div>
             <p className="mt-1 text-xs text-white/85 leading-snug">
               A 30-minute call with Max Bisinger, Head of Recruitment, to talk through the options above.
             </p>
