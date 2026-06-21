@@ -230,7 +230,7 @@ export function buildFuturesEvaluation(
   if (power.length) physicalGroups.push({ label: "Power, Agility & Endurance", metrics: power });
   const ageGroup = benchmarkAgeGroup(prospect.date_of_birth);
   const benchmarkNote = [...speed, ...power].some((m) => m.tier)
-    ? `Tiers benchmarked against European academy standards for the ${ageGroup} age group.`
+    ? `Ratings and physical tiers are benchmarked against European academy standards for the ${ageGroup} age group.`
     : undefined;
 
   // Overall is the average of the four category ratings (read-only on profile + report).
