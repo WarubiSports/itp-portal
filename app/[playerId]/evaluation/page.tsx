@@ -141,6 +141,9 @@ export default async function EvaluationPage({ params }: Props) {
               );
             })}
           </div>
+          <p className="mt-3 text-xs text-[var(--color-text-muted)]">
+            Benchmarked against European academy standards for the respective age group.
+          </p>
           {data.narrative && (
             <div className="mt-4 rounded-lg border-l-2 border-[var(--color-brand)] bg-[var(--color-surface-elevated)] p-4">
               <p className="text-sm leading-relaxed text-[var(--color-text-secondary)] whitespace-pre-line">
