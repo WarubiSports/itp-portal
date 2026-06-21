@@ -2,7 +2,6 @@ import { supabase } from "@/lib/supabase";
 import { resolvePlayer } from "@/lib/resolvePlayer";
 import { Activity, Dumbbell, Footprints, Ruler, Target, Timer, Zap, TrendingDown, TrendingUp, Minus } from "lucide-react";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -54,16 +53,14 @@ const CATEGORY_ICON: Record<string, typeof Activity> = {
   body_composition: Ruler,
 };
 
-function getAgeGroup(dob: string | null | undefined): "U17" | "U19" | "U21" {
-  if (!dob) return "U19";
-  const birth = new Date(dob);
-  const now = new Date();
-  let age = now.getFullYear() - birth.getFullYear();
-  const m = now.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
-  if (age <= 16) return "U17";
-  if (age <= 18) return "U19";
-  return "U21";
+function getAgeGroup(dob: string | null | undefined): "U-17" | "U-19" | "U-21" {
+  if (!dob) return "U-19";
+  // Use the dash form so the benchmark lookup matches test_benchmarks. Birth-year
+  // cohorts, 2026/27 season: U-17 = 2010/2011, U-19 = 2008/2009, U-21 = 2007 and older.
+  const birthYear = parseInt(String(dob).substring(0, 4));
+  if (birthYear >= 2010) return "U-17";
+  if (birthYear >= 2008) return "U-19";
+  return "U-21";
 }
 
 function getTier(value: number | null, benchmark: TestBenchmark): Tier | null {
