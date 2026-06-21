@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { CalendarDays, ClipboardCheck, Activity, Home, ShoppingCart, Dumbbell } from "lucide-react";
+import { CalendarDays, ClipboardCheck, Activity, Home, ShoppingCart, Dumbbell, FileText } from "lucide-react";
 
 type Variant = "prospect" | "program";
 
@@ -14,6 +14,8 @@ type TabNavProps = {
   program?: "itp_men" | "itp_women" | "warubi_futures";
   /** Only used in `prospect` variant — shows a checkmark when onboarding is done. */
   completed?: boolean;
+  /** Futures only — shows the Evaluation tab once staff have shared the report. */
+  evaluationReady?: boolean;
 };
 
 /**
@@ -21,7 +23,7 @@ type TabNavProps = {
  * Program variant has Info + Wellness + Testing always; Chores and Grocery
  * are ITP-only (residential 9-month program features).
  */
-export const TabNav = ({ playerId, variant = "prospect", program, completed = false }: TabNavProps) => {
+export const TabNav = ({ playerId, variant = "prospect", program, completed = false, evaluationReady = false }: TabNavProps) => {
   const pathname = usePathname();
   const isFutures = program === "warubi_futures";
 
@@ -74,7 +76,8 @@ export const TabNav = ({ playerId, variant = "prospect", program, completed = fa
             icon: CalendarDays,
             active:
               !pathname.includes("/onboarding") &&
-              !pathname.includes("/testing"),
+              !pathname.includes("/testing") &&
+              !pathname.includes("/evaluation"),
           },
           {
             label: completed ? "Onboarding \u2713" : "Onboarding",
@@ -94,6 +97,18 @@ export const TabNav = ({ playerId, variant = "prospect", program, completed = fa
                   href: `/${playerId}/testing`,
                   icon: Dumbbell,
                   active: pathname.includes("/testing"),
+                },
+              ]
+            : []),
+          // Evaluation tab appears only once the camp report has been shared
+          // with the family (staff set trial_report_data.shared_at).
+          ...(isFutures && evaluationReady
+            ? [
+                {
+                  label: "Evaluation",
+                  href: `/${playerId}/evaluation`,
+                  icon: FileText,
+                  active: pathname.includes("/evaluation"),
                 },
               ]
             : []),
