@@ -84,8 +84,26 @@ export const SignatureModal = ({
   onClose: () => void
   onSigned: () => void
 }) => {
-  const playerSig = useSignatureCanvas()
-  const parentSig = useSignatureCanvas()
+  const {
+    canvasRef: playerCanvasRef,
+    hasSignature: playerHasSignature,
+    init: initPlayerSignature,
+    startDrawing: startPlayerSignature,
+    draw: drawPlayerSignature,
+    stopDrawing: stopPlayerSignature,
+    clear: clearPlayerSignature,
+    toBlob: playerSignatureToBlob,
+  } = useSignatureCanvas()
+  const {
+    canvasRef: parentCanvasRef,
+    hasSignature: parentHasSignature,
+    init: initParentSignature,
+    startDrawing: startParentSignature,
+    draw: drawParentSignature,
+    stopDrawing: stopParentSignature,
+    clear: clearParentSignature,
+    toBlob: parentSignatureToBlob,
+  } = useSignatureCanvas()
 
   const [agreed, setAgreed] = useState(false)
   const [signerName, setSignerName] = useState('')
@@ -96,14 +114,14 @@ export const SignatureModal = ({
 
   const canSubmit = agreed
     && signerName.trim().length > 0
-    && playerSig.hasSignature
-    && (!isMinor || (parentName.trim().length > 0 && parentSig.hasSignature))
+    && playerHasSignature
+    && (!isMinor || (parentName.trim().length > 0 && parentHasSignature))
     && !submitting
 
   useEffect(() => {
-    playerSig.init()
-    if (isMinor) parentSig.init()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    initPlayerSignature()
+    if (isMinor) initParentSignature()
+  }, [initParentSignature, initPlayerSignature, isMinor])
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
@@ -115,7 +133,7 @@ export const SignatureModal = ({
     setSubmitting(true)
 
     try {
-      const playerBlob = await playerSig.toBlob()
+      const playerBlob = await playerSignatureToBlob()
       const formData = new FormData()
       formData.append('signature', playerBlob, 'signature.png')
       formData.append('player_id', playerId)
@@ -124,7 +142,7 @@ export const SignatureModal = ({
       formData.append('signer_name', signerName.trim())
 
       if (isMinor) {
-        const parentBlob = await parentSig.toBlob()
+        const parentBlob = await parentSignatureToBlob()
         formData.append('parent_signature', parentBlob, 'parent_signature.png')
         formData.append('parent_signer_name', parentName.trim())
       }
@@ -201,21 +219,21 @@ export const SignatureModal = ({
               <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                 Player&apos;s signature
               </label>
-              {playerSig.hasSignature && (
-                <button onClick={playerSig.clear} className="text-xs text-[var(--color-brand)] font-medium">Clear</button>
+              {playerHasSignature && (
+                <button onClick={clearPlayerSignature} className="text-xs text-[var(--color-brand)] font-medium">Clear</button>
               )}
             </div>
             <canvas
-              ref={playerSig.canvasRef}
+              ref={playerCanvasRef}
               className="w-full border border-[var(--color-border)] rounded-xl bg-white cursor-crosshair"
               style={{ height: 150, touchAction: 'none' }}
-              onMouseDown={playerSig.startDrawing}
-              onMouseMove={playerSig.draw}
-              onMouseUp={playerSig.stopDrawing}
-              onMouseLeave={playerSig.stopDrawing}
-              onTouchStart={playerSig.startDrawing}
-              onTouchMove={playerSig.draw}
-              onTouchEnd={playerSig.stopDrawing}
+              onMouseDown={startPlayerSignature}
+              onMouseMove={drawPlayerSignature}
+              onMouseUp={stopPlayerSignature}
+              onMouseLeave={stopPlayerSignature}
+              onTouchStart={startPlayerSignature}
+              onTouchMove={drawPlayerSignature}
+              onTouchEnd={stopPlayerSignature}
             />
             <p className="text-xs text-[var(--color-text-muted)] mt-1">
               Draw your signature above using your finger or mouse
@@ -253,21 +271,21 @@ export const SignatureModal = ({
                   <label className="block text-sm font-medium text-[var(--color-text-secondary)]">
                     Parent / Guardian signature
                   </label>
-                  {parentSig.hasSignature && (
-                    <button onClick={parentSig.clear} className="text-xs text-[var(--color-brand)] font-medium">Clear</button>
+                  {parentHasSignature && (
+                    <button onClick={clearParentSignature} className="text-xs text-[var(--color-brand)] font-medium">Clear</button>
                   )}
                 </div>
                 <canvas
-                  ref={parentSig.canvasRef}
+                  ref={parentCanvasRef}
                   className="w-full border border-[var(--color-border)] rounded-xl bg-white cursor-crosshair"
                   style={{ height: 150, touchAction: 'none' }}
-                  onMouseDown={parentSig.startDrawing}
-                  onMouseMove={parentSig.draw}
-                  onMouseUp={parentSig.stopDrawing}
-                  onMouseLeave={parentSig.stopDrawing}
-                  onTouchStart={parentSig.startDrawing}
-                  onTouchMove={parentSig.draw}
-                  onTouchEnd={parentSig.stopDrawing}
+                  onMouseDown={startParentSignature}
+                  onMouseMove={drawParentSignature}
+                  onMouseUp={stopParentSignature}
+                  onMouseLeave={stopParentSignature}
+                  onTouchStart={startParentSignature}
+                  onTouchMove={drawParentSignature}
+                  onTouchEnd={stopParentSignature}
                 />
                 <p className="text-xs text-[var(--color-text-muted)] mt-1">
                   Parent or guardian draws their signature above
