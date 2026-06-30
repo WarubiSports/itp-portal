@@ -8,6 +8,7 @@ import { ContactsList } from "@/components/ContactsList";
 import { WeatherForecast } from "@/components/WeatherForecast";
 import { PaymentSection } from "@/components/PaymentSection";
 import { sortContacts, STAFF_LOCATION_NAMES } from "@/lib/sortContacts";
+import { ExternalLink, Home } from "lucide-react";
 
 type Props = {
   player: PlayerRecord;
@@ -43,6 +44,7 @@ export const ProgramView = async ({ player }: Props) => {
     .not("name", "in", `(${STAFF_LOCATION_NAMES.map((n) => `"${n}"`).join(",")})`);
 
   let locations = (locationsData || []) as ITPLocation[];
+  let assignedHousing: ITPLocation | null = null;
 
   // Override housing with actual house/room if assigned
   if (player.room_id) {
@@ -60,15 +62,18 @@ export const ProgramView = async ({ player }: Props) => {
         .maybeSingle();
 
       if (houseData) {
+        const housingLocation = {
+          id: roomData.house_id,
+          name: `${houseData.name} — ${roomData.name}`,
+          address: houseData.address || "Player House",
+          maps_url: houseData.maps_url || null,
+          category: "housing",
+          itp_site: "Köln",
+        } as ITPLocation;
+        assignedHousing = housingLocation;
+
         locations = locations.map((loc) =>
-          loc.category === "housing"
-            ? {
-                ...loc,
-                name: `${houseData.name} — ${roomData.name}`,
-                address: houseData.address || "Player House",
-                maps_url: houseData.maps_url || loc.maps_url,
-              }
-            : loc
+          loc.category === "housing" ? { ...loc, ...housingLocation } : loc
         );
       }
     }
@@ -114,6 +119,39 @@ export const ProgramView = async ({ player }: Props) => {
 
   return (
     <>
+      {assignedHousing && (
+        <section className="px-4 pb-4">
+          <div className="rounded-xl border border-emerald-700/30 bg-emerald-900/20 p-4">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-300">
+                <Home size={20} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-semibold uppercase tracking-wider text-emerald-300">
+                  Your Housing Assignment
+                </p>
+                <p className="mt-1 font-semibold text-[var(--color-text)]">
+                  {assignedHousing.name}
+                </p>
+                <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                  {assignedHousing.address}
+                </p>
+                {assignedHousing.maps_url && (
+                  <a
+                    href={assignedHousing.maps_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-brand)] px-3 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                  >
+                    Open in Maps <ExternalLink size={13} />
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       <PaymentSection
         paymentLink={player.payment_link}
         paymentAmount={player.payment_amount}
