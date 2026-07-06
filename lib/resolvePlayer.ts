@@ -125,7 +125,7 @@ function normalizePlayer(p: Record<string, unknown>): PlayerRecord {
     needs_pickup: (p.needs_pickup as boolean) ?? null,
     pickup_location: (p.pickup_location as string) || null,
     whatsapp_number: (p.whatsapp_number as string) || (p.phone as string) || null,
-    travel_arrangements: null,
+    travel_arrangements: (p.travel_arrangements as string) || null,
     travel_submitted_at: (p.travel_submitted_at as string) || null,
     onboarding_completed_at: (p.onboarding_completed_at as string) || null,
     scout_id: null,
