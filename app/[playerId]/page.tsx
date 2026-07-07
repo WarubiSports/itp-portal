@@ -4,6 +4,7 @@ import type { TrialProspect, CalendarEvent, ITPLocation } from "@/lib/types";
 import { WeeklyCalendar } from "@/components/WeeklyCalendar";
 import { LocationsList } from "@/components/LocationsList";
 import { TravelForm } from "@/components/TravelForm";
+import { TravelPacket } from "@/components/TravelPacket";
 import { ContactsList } from "@/components/ContactsList";
 import { WeatherForecast } from "@/components/WeatherForecast";
 import { DocumentStatus } from "@/components/DocumentStatus";
@@ -13,6 +14,7 @@ import { CommittedView } from "@/components/views/CommittedView";
 import { AlumniView } from "@/components/views/AlumniView";
 import { ClosedView } from "@/components/views/ClosedView";
 import { resolvePlayer, derivePhase } from "@/lib/resolvePlayer";
+import { getTravelPacketDocuments } from "@/lib/travelPacket";
 import { sortContacts, STAFF_LOCATION_NAMES } from "@/lib/sortContacts";
 import { notFound } from "next/navigation";
 
@@ -139,13 +141,15 @@ export default async function PlayerPage({ params }: Props) {
     }
   }
 
-  // Fetch signed documents
+  // Fetch signed documents. Prospect signatures live under prospect_id until
+  // promotion; after conversion they move to player_id, so support both.
   const { data: signedDocsData } = await supabase
     .from("player_documents")
     .select("document_type, document_title, signed_at, signer_name")
-    .eq("player_id", playerId);
+    .or(`prospect_id.eq.${playerId},player_id.eq.${playerId}`);
 
   const signedDocs = (signedDocsData || []) as { document_type: string; document_title: string; signed_at: string; signer_name: string }[];
+  const travelPacketDocuments = await getTravelPacketDocuments(playerId);
 
   // Fetch ITP staff contacts
   const { data: staffContacts } = await supabase
@@ -195,21 +199,10 @@ export default async function PlayerPage({ params }: Props) {
 
   return (
     <>
-      {player.travel_arrangements && (
-        <section className="px-4 pb-6">
-          <div className="flex items-start gap-3 rounded-xl border border-amber-700/30 bg-amber-900/20 p-4">
-            <span className="mt-0.5 text-lg">🚐</span>
-            <div>
-              <p className="text-sm font-semibold text-amber-200">
-                Pick-up
-              </p>
-              <p className="text-sm text-amber-300">
-                {player.travel_arrangements}
-              </p>
-            </div>
-          </div>
-        </section>
-      )}
+      <TravelPacket
+        travelArrangements={player.travel_arrangements}
+        documents={travelPacketDocuments}
+      />
       <DocumentStatus
         signedDocs={signedDocs}
         playerId={playerId}

@@ -7,7 +7,9 @@ import { LocationsList } from "@/components/LocationsList";
 import { ContactsList } from "@/components/ContactsList";
 import { WeatherForecast } from "@/components/WeatherForecast";
 import { PaymentSection } from "@/components/PaymentSection";
+import { TravelPacket } from "@/components/TravelPacket";
 import { sortContacts, STAFF_LOCATION_NAMES } from "@/lib/sortContacts";
+import { getTravelPacketDocuments } from "@/lib/travelPacket";
 import { ExternalLink, Home } from "lucide-react";
 
 type Props = {
@@ -116,6 +118,7 @@ export const ProgramView = async ({ player }: Props) => {
 
   const firstName = player.first_name;
   const lastName = player.last_name;
+  const travelPacketDocuments = await getTravelPacketDocuments(player.id);
 
   return (
     <>
@@ -156,6 +159,11 @@ export const ProgramView = async ({ player }: Props) => {
         paymentLink={player.payment_link}
         paymentAmount={player.payment_amount}
         paymentStatus={player.payment_status}
+      />
+
+      <TravelPacket
+        travelArrangements={player.travel_arrangements}
+        documents={travelPacketDocuments}
       />
 
       {startDate && endDate && events.length > 0 && (

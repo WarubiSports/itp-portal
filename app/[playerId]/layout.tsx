@@ -20,7 +20,13 @@ export default async function PlayerLayout({ params, children }: Props) {
     notFound();
   }
 
-  const { source, data: player } = resolved;
+  const { source, data: player, raw } = resolved;
+
+  // Whether the Futures camp evaluation has been shared with the family.
+  // Drives the Evaluation tab: it only appears once staff publish the report
+  // (sets trial_report_data.shared_at), so families never see an empty tab.
+  const evaluationShared = !!(raw as { trial_report_data?: { shared_at?: string | null } })
+    ?.trial_report_data?.shared_at;
 
   // Fetch scout info only for prospects (players don't carry scout_id)
   let scoutInfo: { name: string; affiliation: string | null } | null = null;
@@ -72,7 +78,7 @@ export default async function PlayerLayout({ params, children }: Props) {
         {isAlumni || isClosed ? null : source === "player" ? (
           <TabNav playerId={playerId} variant="program" program={(player as { program?: 'itp_men' | 'itp_women' | 'warubi_futures' }).program} />
         ) : showOnboarding ? (
-          <TabNav playerId={playerId} variant="prospect" program={(player as { program?: 'itp_men' | 'itp_women' | 'warubi_futures' }).program} completed={!!player.onboarding_completed_at} />
+          <TabNav playerId={playerId} variant="prospect" program={(player as { program?: 'itp_men' | 'itp_women' | 'warubi_futures' }).program} completed={!!player.onboarding_completed_at} evaluationReady={evaluationShared} />
         ) : null}
         {children}
       </main>

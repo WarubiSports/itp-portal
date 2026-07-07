@@ -3,10 +3,12 @@ import { supabase } from "@/lib/supabase";
 import type { TrialProspect, ITPLocation } from "@/lib/types";
 import { DocumentStatus } from "@/components/DocumentStatus";
 import { PaymentSection } from "@/components/PaymentSection";
+import { TravelPacket } from "@/components/TravelPacket";
 import { ContactsList } from "@/components/ContactsList";
 import { LocationsList } from "@/components/LocationsList";
 import { FileText, CheckCircle2, AlertCircle } from "lucide-react";
 import { sortContacts, STAFF_LOCATION_NAMES } from "@/lib/sortContacts";
+import { getTravelPacketDocuments } from "@/lib/travelPacket";
 import { ageAtPreseason, formatPreseasonStart } from "@/lib/programCalendar";
 
 type Props = {
@@ -44,6 +46,7 @@ export const CommittedView = async ({ prospect }: Props) => {
     signed_at: string;
     signer_name: string;
   }[];
+  const travelPacketDocuments = await getTravelPacketDocuments(playerId);
 
   // Futures players see only their training venue (and housing if arranged).
   // The wider ITP venue list isn't relevant to a 10-day intake.
@@ -186,6 +189,11 @@ export const CommittedView = async ({ prospect }: Props) => {
           </p>
         </div>
       </section>
+
+      <TravelPacket
+        travelArrangements={prospect.travel_arrangements}
+        documents={travelPacketDocuments}
+      />
 
       {/* Signing status — includes program-only docs (Program Agreement, Housing) on top of the trial 3 */}
       <DocumentStatus
